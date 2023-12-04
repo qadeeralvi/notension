@@ -1,0 +1,91 @@
+.bg-color{
+    background-color: rgb(245, 239, 233);
+}
+.form-border{
+    border-radius:30px;
+    color:#fff;
+}
+.font-family-customer{
+    font-family: sans-serif;
+}
+.font-color{
+   color:black;
+}
+.fontbg-color{
+    background-color:rgb(57, 96, 191);
+ }
+ .btn-green{
+    background-color: f=green;
+ }
+ .category-font{
+    font-weight: bold;
+    font-size: 13px;
+ }
+
+.home-cont{
+    font-weight: 400;
+    line-height: 1.2;
+    font-size: 20px;
+    color: rgb(64, 76, 103);
+    text-align: inherit;
+}
+
+.search-input{
+    height: 70px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+.search-btn{
+    height: 70px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    height: 55px;
+    background-color: white;
+    color: red;
+    border-color:white;
+}
+.gray:hover {
+    background-color: #fff;
+}
+.gray:hover {
+    background-color: rgb(201, 201, 201);
+  }
+.card-button {
+    cursor: pointer;
+}
+
+.front-toggle-bg {
+    background-color: rgba(0,0,0,.1);
+}
+
+@media screen and (max-width: 400px) {
+        .job {
+      text-align: center;
+    }
+  }
+
+
+.wallet-price{
+    color:aquamarine;
+    margin-left: 5px;
+}
+
+
+.deYsAp {
+    margin: 0px 0px 5px;
+    font-weight: 600;
+    line-height: 1.25;
+    padding-bottom: 30px;
+    padding-top: 20px;
+}
+
+@media screen and (min-width: 992px){
+.deYsAp {
+    font-size: 27px;
+}
+}
+
+label {
+    font-size: 1.5rem !important;
+    cursor: pointer;
+}
