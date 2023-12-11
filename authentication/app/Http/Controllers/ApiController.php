@@ -21,8 +21,8 @@ use App\Mail\RegisterMail;
 use App\Mail\RegisterGreetingMail;
 use App\Mail\ForgetMail;
 use File;
-
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Support\Str;
 
 
 class ApiController extends Controller
@@ -42,9 +42,138 @@ class ApiController extends Controller
         
     }
 
+    public function loginUserProvider(Request $request){
 
-   
+        $user_exit = User::where('email',$request->email)->first();
+        $provider = ServiceGiver::where('email',$request->email)->first();
+        $code = rand(111111,999999);
+
+        if($user_exit){
+            if($user_exit->status=='inactive' || $user_exit->status=='suspend' ){
+               return response()->json([
+                      'status' => 203,
+                      'message' => 'you dont allow to login because your account is'.$user_exit->status,
+                  ]);
+              }
+
+                Mail::to($request->email)->send(new ForgetMail($code));
+
+                User::where('id',$user_exit->id)->update([
+
+                        'forget_email_code'=>$code,
+                ]);
+               
+            }
+            elseif($provider){
+                if($provider->status=='inactive' || $provider->status=='suspend' ){
+                        return response()->json([
+                            'status' => 203,
+                            'message' => 'you dont allow to login because your account is'.$provider->status,
+                        ]);
+                }
+                $response = Http::post('https://payment.notension.pk/api/wallet/',[
+                    'provider_id'=>$provider->id,
+                ]);
     
+                $data = $response->json();
+
+                Mail::to($request->email)->send(new ForgetMail($code));
+
+                ServiceGiver::where('id',$provider->id)->update([
+
+                        'email_verification_code'=>$code,
+                ]);
+
+            }
+            else{
+
+                return response()->json([ 
+                    'status' => 404 ,
+                    'message' =>"Invalid Email"
+                ]);
+
+            }
+
+
+    }
+
+    public function verifyOtpUserProvider(Request $request){
+
+        $user_exit = User::where('email',$request->email)->first();
+        $provider = ServiceGiver::where('email',$request->email)->first();
+
+        if($user_exit){
+            if ($user_exit->forget_email_code==$request->code) { 
+
+                $input = $request->only('email');
+                $jwt_token = null;
+                // Custom authentication logic (without password check)
+                if ($user = User::where('email', $input['email'])->first()) {
+                    $jwt_token = JWTAuth::fromUser($user, ['user']);
+                    
+                }
+                if (!$jwt_token) {
+                    return response()->json([
+                        'status' => 400,
+                        'success' => false,
+                        'message' => 'Invalid Email',
+                    ]);
+                }
+                return $this->respondWithToken($jwt_token, 'user',$user_exit->id);
+            }
+        }
+        elseif($provider){
+            if ($provider->email_verification_code==$request->code) { 
+                $creds = $request->only('email');
+
+                if ($serviceGiver = ServiceGiver::where('email', $creds['email'])->first()) {
+                    // Generate a token or session for the service provider without checking the password
+                    $token = Str::random(60); // Generate a random token, you may customize this according to your needs
+                    $serviceGiver->update(['remember_token' => $token]);
+
+                    return response()->json([
+                        'status' => 200,
+                        'type' => 'provider',
+                        'provider_info' => $serviceGiver,
+                        'token' => $token,
+                    ]);
+                }
+            }
+        }
+        else{
+            return response()->json([ 'status' => 404,'message'=>'Code not matched' ]);
+        }
+    }
+
+    protected function  respondWithToken($token,$type,$id=null){
+
+        return response()->json([
+            'status' => 200,
+            'type' => 'user',
+            'access_token' => $token,
+            'user_id' => $id,
+            'profile_img' => 0,
+            'token_type' => 'Bearer',
+        
+        ]);
+
+    }
+
+    public function send_otp(Request $request)
+    {
+        
+       $check =  GlobalHelper::sendOTP('test007',"message","+923065179114");
+                        
+            return response()->json([ 
+                'status' => 200,
+                'check' =>$check,
+                'message' => 'Notification sent Successfully'
+            ]);
+
+    }
+    
+    //admin sIDE Api
+
     public function adminLogin(Request $request)
     {
 
@@ -89,36 +218,6 @@ class ApiController extends Controller
                     ]);
          }
     }
-    
-
-    protected function  respondWithToken($token,$type){
-
-        return response()->json([
-            'status' => 200,
-            'type' => ($type!=''?'user':"provider"),
-            'access_token' => $token,
-            'user_id' => Auth::user()->id,
-            'profile_img' => 0,
-            'token_type' => 'Bearer',
-        
-        ]);
-
-    }
-
-    public function send_otp(Request $request)
-    {
-        
-       $check =  GlobalHelper::sendOTP('test007',"message","+923065179114");
-                        
-            return response()->json([ 
-                'status' => 200,
-                'check' =>$check,
-                'message' => 'Notification sent Successfully'
-            ]);
-
-    }
-    
-    //admin sIDE Api
     
     public function provider_list(Request $request)
     {

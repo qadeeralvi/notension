@@ -337,14 +337,8 @@
                                 email: this.form.email,
                             };
 
-                         axios.post(this.$authentication+'user_forget/',parameters)
+                         axios.post(this.$authentication+'loginUserProvider/',parameters)
                                 .then(response => {
-                                    if(response.data.status==200){
-                                        swal("Check Your email!", "" ,"success");
-                                    }
-                                    if(response.data.status==404){
-                                        swal("Oops!", response.data.message, "error");
-                                    }
                                 })
                                 .catch(error => {
                                 console.log(error)
@@ -361,14 +355,25 @@
                                 code:values,
                             };
 
-                            axios.post(this.$authentication+'use_verify_code/',parameters)
+                            axios.post(this.$authentication+'verifyOtpUserProvider/',parameters)
                                 .then(response => {
                                     if(response.data.status==200){
+                                        if(response.data.type=='provider'){
+
+                                                window.localStorage.setItem('token',JSON.stringify(response.data.access_token))
+                                                window.localStorage.setItem('provider',JSON.stringify(response.data.provider_info))
+                                                window.localStorage.setItem('type',JSON.stringify(response.data.type))
+                                                this.$router.push({name:"ProviderHome"});
+                                                window.location.reload();
+                                            }
+
+                                            else{
                                                 window.localStorage.setItem('accessToken',response.data.access_token)
                                                 window.localStorage.setItem('user',JSON.stringify(response.data))
                                                 window.localStorage.setItem('type',JSON.stringify(response.data.type))
                                                 this.$router.push('/userHome');
                                                 location.href='/userHome';
+                                            }
                                     }
                                     if(response.data.status==404){
                                         swal("Oops!", response.data.message, "error");

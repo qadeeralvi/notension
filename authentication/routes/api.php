@@ -57,6 +57,12 @@ Route::prefix('google')->name('google.')->group( function(){
 });
 
 
+//Common API
+Route::post('/loginUserProvider',[ApiController::class,'loginUserProvider']);
+Route::post('/verifyOtpUserProvider',[ApiController::class,'verifyOtpUserProvider']);
+
+
+
 // Admin API
 Route::post('/provider_list',[ApiController::class,'provider_list']);
 Route::post('/user_list',[ApiController::class,'user_list']);
