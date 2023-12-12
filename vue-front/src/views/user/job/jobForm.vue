@@ -20,7 +20,6 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
-
                                         <div class="form-group mb-20">
                                             <label for="title" class="mb-2 semi-bold title-color">{{ this.translate('heading') }} <span style="color: red;">*</span></label>
                                             <input type="text"  :class="{ 'form-control': true, 'is-invalid': v$.form.title.$errors.length > 0 }" v-model="v$.form.title.$model" id="title" class="form-control"  placeholder="Brief explanation of the assignment" >
@@ -33,7 +32,7 @@
                                     <div class="col-lg-12">
                                         <div class="form-group mb-20">
                                             <label for="title" class="mb-2 semi-bold title-color">{{ this.translate('description') }} <span style="color: red;">*</span></label>
-                                            <textarea  :class="{ 'form-control': true, 'is-invalid': v$.form.description.$errors.length > 0 }" v-model="v$.form.description.$model"  cols="30" rows="20" placeholder="A good description of the assignment makes it easier for companies to give a good answer." ></textarea>
+                                            <textarea :class="{ 'form-control': true, 'is-invalid': v$.form.description.$errors.length > 0 }" v-model="v$.form.description.$model"  cols="30" rows="20" placeholder="A good description of the assignment makes it easier for companies to give a good answer." ></textarea>
                                                 <div class="input-errors" v-for="(error, index) of v$.form.description.$errors" :key="index">
                                                     <div class="error-msg">{{ error.$message }}</div>
                                                 </div>
@@ -46,8 +45,8 @@
                                                 <label for="l_name" class="mb-2 semi-bold title-color">{{ this.translate('category') }} <span style="color: red;">*</span></label>
                                                     <div class="custom-select c1">
                                                             <select  @change="fetchSubCategory($event)" v-model="selectedCategoryId" class="form-control">
-                                                                    <option selected disabled>Choose category from dropdown</option>
-                                                                    <option v-for="cat in categories.data" :value="cat.id">{{ cat.name }}</option>
+                                                                    <option disabled>Choose category from dropdown</option>
+                                                                    <option v-for="cat in categories.data" :value="cat.id" :selected="this.selectedCategoryId === cat.id">{{ cat.name }}</option>
                                                             </select>
                                                     </div>
                                             </div>
@@ -57,7 +56,7 @@
                                                 <label for="l_name" class="mb-2 semi-bold title-color">{{ this.translate('subCategory') }}</label>
                                                 <div class="custom-select c1">
                                                     <select name="" id=""  class="form-control"  v-model="selectedSubCategoryId">
-                                                            <option >Choose Subcategory from dropdown</option>
+                                                            <option value="">Choose Subcategory from dropdown</option>
                                                             <option v-for="subCat in subCategories.data" :value="subCat.id">{{ subCat.name }}</option>
                                                     </select>
                                                 </div>
@@ -107,8 +106,6 @@
                                                     </div>
                                             </div>
                                         </div>
-
-            
                                         <div class="col-lg-6">
                                             <div class="form-group mb-20">
                                                 <label for="city" class="mb-2 semi-bold title-color">{{ this.translate('city') }} <span style="color: red;">*</span></label>
@@ -183,8 +180,6 @@
                                                     <span>Submit</span>
                                         </button>
                                     </center>
-
-
                                 </div>
                                     <center>
                                         <div v-show="currentTab != 2">
@@ -235,6 +230,7 @@
                     
                         if(selectedCat.type==='category'){
                             this.selectedCategoryId = selectedCat.id;
+                            console.log(this.selectedCategoryId )
                             this.fetchSubCategory('',selectedCat.id,'cat');
                         }
                         else if(selectedCat.type==='sub_category')
@@ -325,10 +321,12 @@
         computed: {
             isNextButtonDisabled() {
             if (this.currentTab === 0) {
+               
                 this.prewBtn=true;
-                if(this.form.title!=null && this.form.description!=null && this.selectedCategoryId!=''){
+                if (this.form.title && this.form.title.length>0 && this.form.description && this.form.description.length>0  && this.selectedCategoryId!=null) {
                     return false;
                 }
+               
             }
 
             if (this.currentTab === 1) {
@@ -509,7 +507,7 @@
                                             });
                                 }else{
 
-                                    swal("Before Job Post must Login!", "" ,"error");
+                                    swal("Do Login for more details!", "" ,"success");
                                     this.$router.push({name:"Login"});
                                 }
                         },

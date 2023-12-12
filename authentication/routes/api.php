@@ -58,7 +58,7 @@ Route::prefix('google')->name('google.')->group( function(){
 
 
 //Common API
-Route::post('/loginUserProvider',[ApiController::class,'loginUserProvider']);
+Route::post('/optForgetUserProvider',[ApiController::class,'optForgetUserProvider']);
 Route::post('/verifyOtpUserProvider',[ApiController::class,'verifyOtpUserProvider']);
 
 

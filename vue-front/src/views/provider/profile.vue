@@ -125,10 +125,10 @@ export default {
 
                     this.isLoggedIn = localStorage.getItem('provider');
 
-                    const provider_id = JSON.parse(this.isLoggedIn);
+                    const provider = JSON.parse(this.isLoggedIn);
 
                     const parameters = {
-                        id: provider_id,
+                        id: provider.id,
                     };
                     axios.post(this.$authentication+'provider_info/',parameters)
                         .then(response => {

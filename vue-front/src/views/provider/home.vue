@@ -340,10 +340,10 @@ export default {
         async showJobModal(id){
 
               this.isLoggedIn = localStorage.getItem('provider');
-              const provider_id = JSON.parse(this.isLoggedIn);
+              const provider = JSON.parse(this.isLoggedIn);
               
               const parameters = {
-                    provider_id: provider_id,
+                    provider_id: provider.id,
                     job_id:id,
                   };
               
@@ -386,9 +386,9 @@ export default {
         jobAccept() {
 
                     this.isLoggedIn = localStorage.getItem('provider');
-                    const provider_id = JSON.parse(this.isLoggedIn);
+                    const provider = JSON.parse(this.isLoggedIn);
                     const parameters = {
-                      provider_id: provider_id,
+                      provider_id: provider.id,
                       job_id:this.form.job_id,
                       status:'active',
                     };
@@ -406,9 +406,9 @@ export default {
         showChat(receiver_id){
 
               this.isLoggedIn = localStorage.getItem('provider');
-              const provider_id = JSON.parse(this.isLoggedIn);
+              const provider = JSON.parse(this.isLoggedIn);
               const parameters = {
-                    provider_id: provider_id,
+                    provider_id: provider.id,
                     receiver_id:receiver_id,
                   };
                   axios.post(this.$chat + 'provider_messages/', parameters)
@@ -480,16 +480,14 @@ export default {
 
                       const receiver_id = $("#receiver_id").val();
                       this.isLoggedIn = localStorage.getItem('provider');
-                      const provider_id = JSON.parse(this.isLoggedIn);      
+                      const provider = JSON.parse(this.isLoggedIn);      
 
                         const parameters = {
-                            sender_id: provider_id,
+                            sender_id: provider.id,
                             receiver_id : receiver_id,
                             message: this.msg,
                             send_to:"user"
                         };
-                        console.log(parameters)
-
                         axios.post(this.$chat+'send_message/',parameters)
                                 .then(response => {
 

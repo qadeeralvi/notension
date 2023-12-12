@@ -125,9 +125,9 @@
                   wallet() {
                             
                             this.isLoggedIn = localStorage.getItem('provider');
-                            const provider_id = JSON.parse(this.isLoggedIn);
+                            const provider = JSON.parse(this.isLoggedIn);
                             const parameters = {
-                                provider_id: provider_id,
+                                provider_id: provider.id,
                             };
                             axios.post('https://payment.notension.pk/api/wallet/',parameters)
                                 .then(response => {

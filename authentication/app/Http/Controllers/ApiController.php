@@ -42,7 +42,7 @@ class ApiController extends Controller
         
     }
 
-    public function loginUserProvider(Request $request){
+    public function optForgetUserProvider(Request $request){
 
         $user_exit = User::where('email',$request->email)->first();
         $provider = ServiceGiver::where('email',$request->email)->first();
@@ -121,6 +121,7 @@ class ApiController extends Controller
                 }
                 return $this->respondWithToken($jwt_token, 'user',$user_exit->id);
             }
+            else{return response()->json([ 'status' => 404,'message'=>'Code not matched' ]);}
         }
         elseif($provider){
             if ($provider->email_verification_code==$request->code) { 
@@ -138,7 +139,7 @@ class ApiController extends Controller
                         'token' => $token,
                     ]);
                 }
-            }
+            }else{return response()->json([ 'status' => 404,'message'=>'Code not matched' ]);}
         }
         else{
             return response()->json([ 'status' => 404,'message'=>'Code not matched' ]);

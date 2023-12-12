@@ -23,7 +23,7 @@
                             <h3 class="widget-title">{{ this.translate('latestNews') }}</h3>
                             <ul>
                                <li class="post--item">
-                                  <a href="blog-details.html" class="post--img"><img  :src="this.$main + 'assets/img/post/popular1.png'" data-rjs="2" alt=""></a>
+                                  <a href="blog-details.html" class="post--img"><img  :src="this.$main+'assets/img/post/popular1.png'" data-rjs="2" alt=""></a>
                                   <div class="post--content">
                                      <a class="post--date c1" href="blog-details.html">Aus 24,2021</a>
                                      <h4 class="post--title"><a href="blog-details.html">Verify That Open Still Electric Outlet</a></h4>

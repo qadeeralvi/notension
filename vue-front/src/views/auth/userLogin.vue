@@ -337,7 +337,7 @@
                                 email: this.form.email,
                             };
 
-                         axios.post(this.$authentication+'loginUserProvider/',parameters)
+                         axios.post(this.$authentication+'optForgetUserProvider/',parameters)
                                 .then(response => {
                                 })
                                 .catch(error => {
@@ -359,14 +359,12 @@
                                 .then(response => {
                                     if(response.data.status==200){
                                         if(response.data.type=='provider'){
-
                                                 window.localStorage.setItem('token',JSON.stringify(response.data.access_token))
                                                 window.localStorage.setItem('provider',JSON.stringify(response.data.provider_info))
                                                 window.localStorage.setItem('type',JSON.stringify(response.data.type))
                                                 this.$router.push({name:"ProviderHome"});
                                                 window.location.reload();
                                             }
-
                                             else{
                                                 window.localStorage.setItem('accessToken',response.data.access_token)
                                                 window.localStorage.setItem('user',JSON.stringify(response.data))

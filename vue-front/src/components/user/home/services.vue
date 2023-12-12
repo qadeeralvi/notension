@@ -25,14 +25,14 @@
                     <div class="results" v-if="results" style="position: absolute;height: 200px; width: 640px; overflow-y: auto;">
                         <ul class="list-group" >
                             <router-link v-for="(cat, index) in results.data" :key="index" :to="{ path: '/job', query: { cat: cat.id,param:cat.table } }">
-                                <li class="list-group-item">{{ this.translate(cat.name) }}</li>
+                                <li class="list-group-item">{{ cat.name}}</li>
                             </router-link>
                         </ul>
                     </div>
                 </div>
               
-                <div   v-if="categories.data" class="row" style="display: flex;line-height: 1.25;gap: 35px 0px;">
-                    <div  v-for="(cat, index) in categories.data.sort((a, b) => a.id - b.id)"  class="col-sm-3 col-xs-2">
+                <div v-if="categories.data" class="row" style="display: flex;line-height: 1.25;gap: 35px 0px;">
+                    <div v-for="(cat, index) in categories.data.sort((a, b) => a.id - b.id)"  class="col-sm-3 col-xs-2">
                         <router-link :to="{ path: '/job', query: { cat: cat.id,param:'cat' } }">
                             <div class="row">
                                 <div class="services-icon" style="text-align: center;">
@@ -101,6 +101,8 @@ export default {
                             .then(response => {
                                 if(response.data.status==200){
                                     this.results = response.data;
+
+                                    console.log(this.results)
                                 }
                                 else{
                                     this.results = null;
@@ -125,10 +127,9 @@ export default {
 
                             .then(response => {
                                 if(response.data.status==200){
-                                    // console.log(response.data.data)
+                                    console.log(response.data.data)
                                     localStorage.setItem('typeFromHeading', JSON.stringify(response.data.data));
 
-                                    //  window.localStorage.setItem('typeFromHeading',)
                                 }
                                 else{
                                     localStorage.removeItem('typeFromHeading');

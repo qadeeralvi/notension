@@ -39,7 +39,7 @@
                                     <td>{{item.account_title}}</td>
                                     <td>{{item.reference_id}}</td>
                                     <td>{{item.date}}</td>
-                                    <td><img :src="'https://payment.notension.pk/images/'+item.image" height="100" width="100"></td>
+                                    <td><img :src="this.$payment+'images/'+item.image" height="100" width="100" alt="no image"></td>
                                     <td>{{item.time}}</td>
                                     <td>
                                         <button v-if="item.status=='accept'" class="btn btn-success">Approved</button>
@@ -81,11 +81,11 @@
                         fetchData() {
                             
                             this.isLoggedIn = localStorage.getItem('provider');
-                            const provider_id = JSON.parse(this.isLoggedIn);
+                            const provider = JSON.parse(this.isLoggedIn);
                             const parameters = {
-                                provider_id: provider_id,
+                                provider_id: provider.id,
                             };
-                            axios.post(this.$payment+'provider_payment/',parameters)
+                            axios.post(this.$paymentApi+'provider_payment/',parameters)
                                 .then(response => {
                                     this.result =  response.data.data
                                 })
@@ -117,7 +117,7 @@
 
                             if(this.fromDate!='' && this.toDate!=''){
 
-                                axios.post(this.$payment+'payment_filter/',parameters)
+                                axios.post(this.$paymentApi+'payment_filter/',parameters)
                                 .then(response => {
                                     this.result =  response.data.data
                                 })
