@@ -19,24 +19,25 @@
                   </div>
               </div>
               <div class="col-lg-6">
-                  <div class="form-group mb-20">
-                    <label for="stars" class="mb-2 semi-bold title-color">Stars</label>
-                    <br>
-                    <input type="radio" id="star1" name="stars"  v-model="v$.form.stars.$model" value="1" />
-                    <label for="star1" title="1 stars">&#9733;</label>
+                <div class="form-group mb-20">
+                      <label for="stars" class="mb-2 semi-bold title-color">Stars</label><br>
+                        <div class="rate">
+                            <input type="radio" id="star5" name="rate" value="5" v-model="selectedRating" />
+                            <label for="star5" title="text">5 stars</label>
 
-                    <input type="radio" id="star2" name="stars" v-model="v$.form.stars.$model" value="2" />
-                    <label for="star2" title="2 stars">&#9733;</label>
+                            <input type="radio" id="star4" name="rate" value="4" v-model="selectedRating" />
+                            <label for="star4" title="text">4 stars</label>
 
-                    <input type="radio" id="star3" name="stars" v-model="v$.form.stars.$model" value="3" />
-                    <label for="star3" title="3 stars">&#9733;</label>
+                            <input type="radio" id="star3" name="rate" value="3" v-model="selectedRating" />
+                            <label for="star3" title="text">3 stars</label>
 
-                    <input type="radio" id="star4" name="stars" v-model="v$.form.stars.$model" value="4" />
-                    <label for="star4" title="4 stars">&#9733;</label>
+                            <input type="radio" id="star2" name="rate" value="2" v-model="selectedRating" />
+                            <label for="star2" title="text">2 stars</label>
 
-                    <input type="radio" id="star5" name="stars" v-model="v$.form.stars.$model" value="5" />
-                    <label for="star5" title="5 star">&#9733;</label>
-                  </div>
+                            <input type="radio" id="star1" name="rate" value="1" v-model="selectedRating" />
+                            <label for="star1" title="text">1 star</label>
+                        </div>
+                    </div>
               </div>
               <div class="col-lg-12">
                   <div class="form-group mb-20">
@@ -48,7 +49,7 @@
           </div>
   
           <div class="d-flex align-items-center">
-              <button type="submit" class="btn c1-hover btn-border" :disabled="v$.form.$invalid">
+              <button type="submit" class="btn c1-hover btn-border" >
                   <span>Submit</span>
               </button>
           </div>
@@ -71,15 +72,16 @@
                         setup () {
                             return { v$: useVuelidate() }
                         },
-            
+
+                       
                         data() {
 
                             return {
 
                                     result:[],
                                     rating:'',
+                                    selectedRating: '',
                                     form: {
-                                            stars:'',
                                             comment: '',
                                             provider: '',
                                         },
@@ -98,7 +100,7 @@
             
                                     form: {
                                         
-                                            stars: {
+                                            rate: {
                                                 required 
                                             },
                                             comment: {
@@ -156,7 +158,7 @@
                                             const parameters = {
                                                 user_id: user.user_id,
                                                 job_id:this.$route.query.job_id,
-                                                stars: this.form.stars,
+                                                stars: this.selectedRating,
                                                 comment: this.form.comment,
                                                 provider_id: this.form.provider,
                                                 comment_given_by: 'user',
@@ -175,6 +177,11 @@
                                                 });
                 
                                         },
+
+                            setRating(rating) {
+                                    // Update the form.stars property when the user selects a rating
+                                    this.form.stars = rating;
+                                },
                         
                     },
             
@@ -205,4 +212,44 @@ input[type="radio"]:checked ~ label {
 label:hover {
   color: #f5a623;
 }
+
+
+
+
+.rate {
+    float: left;
+    height: 46px;
+    padding: 0 10px;
+}
+.rate:not(:checked) > input {
+    position:absolute;
+    top:-9999px;
+}
+.rate:not(:checked) > label {
+    float:right;
+    width:1em;
+    overflow:hidden;
+    white-space:nowrap;
+    cursor:pointer;
+    font-size:30px;
+    color:#ccc;
+}
+.rate:not(:checked) > label:before {
+    content: '★ ';
+}
+.rate > input:checked ~ label {
+    color: #ffc700;    
+}
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
+    color: #deb217;  
+}
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+    color: #c59b08;
+}
+
 </style>
