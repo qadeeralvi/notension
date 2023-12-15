@@ -33,6 +33,7 @@
                                     <th>Complaint Against</th>
                                     <th>Service Id</th>
                                     <th>Status</th>
+                                    <th>Description</th>
                                     <th>Image</th>
                                     <th>Action</th>
                                 </tr>
@@ -43,6 +44,7 @@
                                     <td>{{item.complaint_against_type}}</td>
                                     <td>{{item.service_id}}</td>
                                     <td> <button :class="(item.status=='Pending'?'btn btn-info':'btn btn-success')" >{{item.status}}</button></td>
+                                    <td>{{item.description}}</td>
                                     <td><img :src="item.file" height="100" width="100"></td>
                                     <td>
                                         <button @click="showChat(item.complainer_id,item.complaint_type,item.id)" class="btn" style="background-color:aqua;">chat</button>
@@ -129,16 +131,13 @@
                         <div class="row">
                             <div class="col-lg-6">
                                     <label class="mb-2 semi-bold title-color">Upload image</label>
-                                    <input ref="fileInput" type="file" @input="pickFile" v-on:change="pickFile">
+                                    <input ref="fileInput" @input="pickFile" @change="handleFileUpload"  type="file" class="form-control" :placeholder="this.translate('uploadImage')" >
                             </div>
-                            <div class="col-lg-4 imagePreviewWrapper"
-                                                :style="{ 'height: 250px; width: 250px;background-image': `url(${form.previewImage})` }"
-                                                @click="selectImage">
+                            <div class="col-lg-6"  v-if="this.previewImage">
+                                <img :src="this.previewImage" alt="" width="300" height="300">
                             </div>
                         </div>
-
-                      
-
+                        <br>
                         <button type="submit" class="btn btn-success btn-lg btn-rounded float-end" style="float:right">save</button>
                     </form>
                 </div>
@@ -206,7 +205,9 @@
                             description:'',
                             previewImage: null,
 
-                        }
+                        },
+
+                        previewImage: null,
                     
                     };
 
@@ -254,9 +255,9 @@
                     fetchData() {
                         
                         this.isLoggedIn = localStorage.getItem('provider');
-                        const provider_id = JSON.parse(this.isLoggedIn);      
+                        const provider = JSON.parse(this.isLoggedIn);      
                             const parameters = {
-                                provider_id: provider_id,
+                                provider_id: provider.id,
                             };
                             axios.post(this.$chat+'provider_complaints/',parameters)
                                 .then(response => {
@@ -271,9 +272,9 @@
                     fetchUserList() {
     
                         this.isLoggedIn = localStorage.getItem('provider');
-                        const provider_id = JSON.parse(this.isLoggedIn);     
+                        const provider = JSON.parse(this.isLoggedIn);     
                             const parameters = {
-                                provider_id: provider_id
+                                provider_id: provider.id
                             };
                             axios.post(this.$service+'providerJobUserList/',parameters)
                                 .then(response => {
@@ -289,15 +290,15 @@
                     saveComplaint() {
     
                                 this.isLoggedIn = localStorage.getItem('provider');
-                                const provider_id = JSON.parse(this.isLoggedIn);      
+                                const provider = JSON.parse(this.isLoggedIn);      
                                 const parameters = {
-                                    complainer_id: provider_id,
+                                    complainer_id: provider.id,
                                     complaint_against_type: this.form.complaint_against_type,
                                     complaint_type: 'provider',
                                     complaint_against_id: this.form.providerId,
                                     service_id: this.form.jobId,
                                     complain_description: this.form.description,
-                                    image: this.form.previewImage,
+                                    image: this.previewImage,
                                 };
                                 axios.post(this.$chat+'register_complaint/',parameters)
                                     .then(response => {
@@ -310,23 +311,21 @@
 
                             },
 
-                            selectImage () {
-                                this.$refs.fileInput.click()
-                            },
+                    handleFileUpload(event) {
 
-                            pickFile () {
+                        const file = event.target.files[0];
+                        this.convertToBase64(file);
+                        this.v$.previewImage.$touch();       
 
-                                    let input = this.$refs.fileInput
-                                    let file = input.files
-                                    if (file && file[0]) {
-                                    let reader = new FileReader
-                                    reader.onload = e => {
-                                        this.form.previewImage = e.target.result
-                                    }
-                                    reader.readAsDataURL(file[0])
-                                    this.$emit('input', file[0])
-                                    }
-                                },
+                        },
+
+                    convertToBase64(file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            this.previewImage = event.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                        },
                                         
                     async sentMsg(){
                         const parameters = {
@@ -338,119 +337,119 @@
                             admin_id:"1",
                         };
 
-                        axios.post(this.$chat+'saveComplainChat/',parameters)
-                                .then(response => {
+                    axios.post(this.$chat+'saveComplainChat/',parameters)
+                            .then(response => {
 
-                                    $('#msg').val(''),
-                                    this.showChat(parameters.complainer_id,parameters.complaint_type,parameters.complain_id);
-                                
-                                })
-                        },
-                        
+                                $('#msg').val(''),
+                                this.showChat(parameters.complainer_id,parameters.complaint_type,parameters.complain_id);
+                            
+                            })
+                    },
+                    
 
-                        async showChat(complainer_id,complaint_type,complaint_id){
+                    async showChat(complainer_id,complaint_type,complaint_id){
 
-                            const parameters = {
-                                user_id: complainer_id,
-                                complaint_id: complaint_id,
-                                user_type: 'provider',
-                            };
+                        const parameters = {
+                            user_id: complainer_id,
+                            complaint_id: complaint_id,
+                            user_type: 'provider',
+                        };
 
-                            axios.post(this.$chat+'complainChat/',parameters)
-                                .then(response => {
+                        axios.post(this.$chat+'complainChat/',parameters)
+                            .then(response => {
 
-                                    if(response.data.status===200){
-                                
-                                        setTimeout(function() {
-                                            var listHeight = $('#chatList').height();
-                                            $('#chatList').scrollTop(listHeight);
-                                        }, 200); 
-                                        
-                                        $('.chatModel').modal('show');
+                                if(response.data.status===200){
+                            
+                                    setTimeout(function() {
+                                        var listHeight = $('#chatList').height();
+                                        $('#chatList').scrollTop(listHeight);
+                                    }, 200); 
+                                    
+                                    $('.chatModel').modal('show');
 
-                                        this.msgResult = response.data.data;
+                                    this.msgResult = response.data.data;
 
-                                        // console.log(this.msgResult)
-                                        let html = '';
-                                        this.msgResult.forEach((message) => {
+                                    // console.log(this.msgResult)
+                                    let html = '';
+                                    this.msgResult.forEach((message) => {
 
-                                            html += `   <li class="d-flex justify-content-between mb-4"
-                                                                ${message.send_by === 'admin' ? 'style="display: none!important"': ''}
-                                                            >
-                                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar" class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
-                                                        <div class="card mask-custom w-100" style="background-color: #cb6666;">
-                                                        <div class="card-header d-flex justify-content-between p-3" style="background-color: black;border-bottom: 1px solid rgba(255,255,255,.3);">
-                                                            <p class="text-light small mb-0"><i class="far fa-clock"></i> `+message.date+` / `+message.time+`</p>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <p class="mb-0">`+message.message+`</p>
-                                                        </div>
-                                                        </div>
-                                                    </li>
+                                        html += `   <li class="d-flex justify-content-between mb-4"
+                                                            ${message.send_by === 'admin' ? 'style="display: none!important"': ''}
+                                                        >
+                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar" class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
+                                                    <div class="card mask-custom w-100" style="background-color: #cb6666;">
+                                                    <div class="card-header d-flex justify-content-between p-3" style="background-color: black;border-bottom: 1px solid rgba(255,255,255,.3);">
+                                                        <p class="text-light small mb-0"><i class="far fa-clock"></i> `+message.date+` / `+message.time+`</p>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <p class="mb-0">`+message.message+`</p>
+                                                    </div>
+                                                    </div>
+                                                </li>
+                                                
+                                                <li class="d-flex justify-content-between mb-4" ${message.send_by === 'provider' ? 'style="display: none!important"': ''} >
                                                     
-                                                    <li class="d-flex justify-content-between mb-4" ${message.send_by === 'provider' ? 'style="display: none!important"': ''} >
-                                                        
-                                                        <div class="card mask-custom w-100" style="background-color: #cb6666;">
-                                                        <div class="card-header d-flex justify-content-between p-3" style="background-color: black;border-bottom: 1px solid rgba(255,255,255,.3);">
-                                                            <p class="text-light small mb-0"><i class="far fa-clock"></i> `+message.date+` / `+message.time+`</p>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <p class="mb-0">`+message.message+`</p>
-                                                        </div>
-                                                        </div>
-                                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar" class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
-                                                    </li>
-                                                        
-                                                        `;
-
-                                        });
-
-                                        const single_msg = this.msgResult[0];
-                                        let input_msg = ` <div style="margin-right: 10px;">
-                                                            <li class="mb-3" >
-                                                                <div class="form-outline form-white" >
-                                                                    <textarea class="form-control" id="msg" rows="8"></textarea>
-                                                                </div>
-                                                            </li>
-                                                            <button type="submit" class="btn btn-success btn-lg btn-rounded float-end" style="float:right">Send</button></div>`;
-
-                                        let inputs = `
-                                                    <input type="hidden" id="complaint_id" value="`+single_msg.complaint_id+`" >
-                                                    <input type="hidden" id="complainer_id" value="`+single_msg.user_id+`" >
-                                                    <input type="hidden" id="complaint_type" value="`+single_msg.user_type+`" >
+                                                    <div class="card mask-custom w-100" style="background-color: #cb6666;">
+                                                    <div class="card-header d-flex justify-content-between p-3" style="background-color: black;border-bottom: 1px solid rgba(255,255,255,.3);">
+                                                        <p class="text-light small mb-0"><i class="far fa-clock"></i> `+message.date+` / `+message.time+`</p>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <p class="mb-0">`+message.message+`</p>
+                                                    </div>
+                                                    </div>
+                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar" class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
+                                                </li>
+                                                    
                                                     `;
 
-                                        html = html+inputs;
+                                    });
 
-                                    this.contents = html+input_msg;
+                                    const single_msg = this.msgResult[0];
+                                    let input_msg = ` <div style="margin-right: 10px;">
+                                                        <li class="mb-3" >
+                                                            <div class="form-outline form-white" >
+                                                                <textarea class="form-control" id="msg" rows="8"></textarea>
+                                                            </div>
+                                                        </li>
+                                                        <button type="submit" class="btn btn-success btn-lg btn-rounded float-end" style="float:right">Send</button></div>`;
 
+                                    let inputs = `
+                                                <input type="hidden" id="complaint_id" value="`+single_msg.complaint_id+`" >
+                                                <input type="hidden" id="complainer_id" value="`+single_msg.user_id+`" >
+                                                <input type="hidden" id="complaint_type" value="`+single_msg.user_type+`" >
+                                                `;
+
+                                    html = html+inputs;
+
+                                this.contents = html+input_msg;
+
+                            }
+
+                            else{
+                                    $('.chatModel').modal('show');
+                                    let input_msg = ` <div style="margin-right: 10px;">
+                                                        <li class="mb-3" >
+                                                            <div class="form-outline form-white" >
+                                                                <textarea class="form-control" id="msg" rows="8"></textarea>
+                                                            </div>
+                                                        </li>
+                                                        <button type="submit" class="btn btn-success btn-lg btn-rounded float-end" style="float:right">Send</button></div>`;
+
+                                    let inputs = `
+                                                <input type="hidden" id="complaint_id" value="`+complaint_id+`" >
+                                                <input type="hidden" id="complainer_id" value="`+complainer_id+`" >
+                                                <input type="hidden" id="complaint_type" value="`+complaint_type+`" >
+                                                `;
+
+                                    this.contents = inputs+input_msg;
                                 }
 
-                                else{
-                                        $('.chatModel').modal('show');
-                                        let input_msg = ` <div style="margin-right: 10px;">
-                                                            <li class="mb-3" >
-                                                                <div class="form-outline form-white" >
-                                                                    <textarea class="form-control" id="msg" rows="8"></textarea>
-                                                                </div>
-                                                            </li>
-                                                            <button type="submit" class="btn btn-success btn-lg btn-rounded float-end" style="float:right">Send</button></div>`;
 
-                                        let inputs = `
-                                                    <input type="hidden" id="complaint_id" value="`+complaint_id+`" >
-                                                    <input type="hidden" id="complainer_id" value="`+complainer_id+`" >
-                                                    <input type="hidden" id="complaint_type" value="`+complaint_type+`" >
-                                                    `;
-
-                                        this.contents = inputs+input_msg;
-                                    }
-
-
-                                })
-                                .catch(error => {
-                                    console.error(error);
-                                });
-                        },
+                            })
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    },
 
                     hideChatModel(){
                         $('#msg').val(''),

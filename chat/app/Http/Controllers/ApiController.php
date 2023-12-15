@@ -588,7 +588,7 @@ class ApiController extends Controller
     
     public function register_complaint (Request $request) 
     {
-        
+
                 if($request->hasFile('file')) {
 
                     $file = $request->file('file');
@@ -767,6 +767,7 @@ class ApiController extends Controller
                 return response()->json([
                     'status'=>404,
                     'message'=>'Complaints not available',
+                    'pro'=>$request->provider_id
                 ]);  
                 
             }

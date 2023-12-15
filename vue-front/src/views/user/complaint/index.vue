@@ -18,6 +18,7 @@
                                 <th>
                                     <input class="form-control" type="text" v-model="serviceSearch" placeholder="Search by Category...">
                                 </th>
+                                <th></th>
                                 <th>
                                     <select class="form-control" v-model="status">
                                         <option value="">All</option>
@@ -27,12 +28,12 @@
                                     </select>
                                 </th>
                                 <th></th>
-                                <th></th>
                         </tr>
                         <tr>
                             <th>S.no</th>
                             <th>Complaint Against</th>
                             <th>Service Id</th>
+                            <th>Description</th>
                             <th>Status</th>
                             <th>Image</th>
                             <th>Action</th>
@@ -43,6 +44,7 @@
                             <td>{{index+1}}</td>
                             <td>{{item.complaint_against_type}}</td>
                             <td>{{item.service_id}}</td>
+                            <td>{{item.complaint_detail}}</td>
                             <td> <button :class="(item.status=='Pending'?'btn btn-info':'btn btn-success')" >{{item.status}}</button></td>
                             <td><img :src="item.file" height="100" width="100"></td>
                             <td>
@@ -129,14 +131,18 @@
 
                         <div class="row">
                             <div class="col-lg-6">
-                                    <label class="mb-2 semi-bold title-color">{{ this.translate('uploadImage') }}</label>
-                                    <input ref="fileInput" type="file" @input="pickFile" v-on:change="pickFile">
+                                <label class="mb-2 semi-bold title-color">{{ this.translate('uploadImage') }}</label>
+                                <input ref="fileInput" @input="pickFile" @change="handleFileUpload"  type="file" class="form-control" :placeholder="this.translate('uploadImage')" >
                             </div>
-                            <div class="col-lg-4 imagePreviewWrapper"
-                                                :style="{ 'height: 250px; width: 250px;background-image': `url(${form.previewImage})` }"
-                                                @click="selectImage">
+                            
+                        </div>
+
+                        <div class="row" v-if="this.previewImage">
+                            <div class="col-lg-6">
+                                <img :src="this.previewImage" alt="" width="300" height="300">
                             </div>
                         </div>
+                        <br>
 
                       
 
@@ -202,7 +208,8 @@
                             jobId:'',
                             description:'',
                             previewImage: null,
-                        }
+                        },
+                        previewImage: null,
                     
                     };
 
@@ -248,7 +255,6 @@
             methods: {
     
                     fetchData() {
-    
                             this.isLoggedIn = localStorage.getItem('user');
                             const user = JSON.parse(this.isLoggedIn);
                             const parameters = {
@@ -262,10 +268,9 @@
                                 .catch(error => {
                                 console.error(error);
                                 });
-    
                     },
 
-                     fetchProviderList() {
+                    fetchProviderList() {
     
                             this.isLoggedIn = localStorage.getItem('user');
                             const user = JSON.parse(this.isLoggedIn);
@@ -280,49 +285,45 @@
                                 console.error(error);
                                 });
 
+                    },
+                    saveComplaint() {
+                            this.isLoggedIn = localStorage.getItem('user');
+                            const user = JSON.parse(this.isLoggedIn);
+                            const parameters = {
+                                complainer_id: user.user_id,
+                                complaint_against_type: this.form.complaint_against_type,
+                                complaint_type: 'user',
+                                complaint_against_id: this.form.providerId,
+                                service_id: this.form.jobId,
+                                complain_description: this.form.description,
+                                image: this.form.previewImage,
+                            };
+                            axios.post(this.$chat+'register_complaint/',parameters)
+                                .then(response => {
+                                    $('.addComplainModel').modal('hide');
+                                    this.fetchData();
+                                })
+                                .catch(error => {
+                                console.error(error);
+                                });
                         },
 
+                            handleFileUpload(event) {
 
-                            saveComplaint() {
-    
-                                this.isLoggedIn = localStorage.getItem('user');
-                                const user = JSON.parse(this.isLoggedIn);
-                                const parameters = {
-                                    complainer_id: user.user_id,
-                                    complaint_against_type: this.form.complaint_against_type,
-                                    complaint_type: 'user',
-                                    complaint_against_id: this.form.providerId,
-                                    service_id: this.form.jobId,
-                                    complain_description: this.form.description,
-                                    image: this.form.previewImage,
-                                };
-                                axios.post(this.$chat+'register_complaint/',parameters)
-                                    .then(response => {
-                                        $('.addComplainModel').modal('hide');
-                                        this.fetchData();
-                                    })
-                                    .catch(error => {
-                                    console.error(error);
-                                    });
+                                alert(event)
 
-                            },
+                                    const file = event.target.files[0];
+                                    this.convertToBase64(file);
+                                    this.v$.previewImage.$touch();       
 
-                            selectImage () {
-                                this.$refs.fileInput.click()
-                            },
+                                    },
 
-                            pickFile () {
-
-                                    let input = this.$refs.fileInput
-                                    let file = input.files
-                                    if (file && file[0]) {
-                                    let reader = new FileReader
-                                    reader.onload = e => {
-                                        this.form.previewImage = e.target.result
-                                    }
-                                    reader.readAsDataURL(file[0])
-                                    this.$emit('input', file[0])
-                                    }
+                            convertToBase64(file) {
+                                    const reader = new FileReader();
+                                    reader.onload = (event) => {
+                                        this.previewImage = event.target.result;
+                                    };
+                                    reader.readAsDataURL(file);
                                 },
                                         
                             async sentMsg(){

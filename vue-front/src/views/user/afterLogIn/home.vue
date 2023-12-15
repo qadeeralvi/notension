@@ -85,12 +85,11 @@ export default {
   },
   computed: {
 
-
-    getBadgeValue() {
-          return async  function(jobId) {
-              await this.fetchCounter(jobId);
-          }
-    },     
+      getBadgeValue() {
+            return async  function(jobId) {
+                await this.fetchCounter(jobId);
+            }
+      },     
 
       paginatedResult() {
           const start = (this.currentPage - 1) * this.pageSize;
