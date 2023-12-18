@@ -27,6 +27,7 @@ section {
 }
 body {
   margin: 0;
+  padding: 0;
   font-family: Jost, sans-serif;
   font-weight: 400;
   font-size: 16px;
@@ -8083,4 +8084,11 @@ textarea.form-control.h-220 {
   .project-content.style--two {
     padding: 44px 15px;
   }
+}
+
+.spinner-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

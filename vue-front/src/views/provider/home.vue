@@ -34,7 +34,7 @@
                                     <div class="form-group">
                                         <button v-if="item.provider_assign_status=='active'" class=" btn btn-success" >{{ item.provider_assign_status }}</button>&nbsp
                                         <button v-if="item.provider_assign_status=='pending'" class="btn btn-info" >{{ item.provider_assign_status }}</button>
-                                        <button v-if="item.provider_assign_status=='active'"  class="btn btn-warning" @click="showChat(item.user_id);$event.stopPropagation()">Chat</button>
+                                        <button v-if="item.provider_assign_status=='active'"  class="btn btn-warning" @click="showChat(item.user_id);$event.stopPropagation()">{{ this.translate('chat') }}</button>
                                     </div>
                                 </div>
 
@@ -43,7 +43,7 @@
                         </span>
 
                         <div style="display: flex; align-items: center;">
-                            <button :disabled="currentPage === 1" @click="currentPage--">Prev</button>
+                            <button :disabled="currentPage === 1" @click="currentPage--">{{ this.translate('prev') }}</button>
                             <div v-for="page in pageCount" :key="page" style="margin: 0 5px;">
                             <button 
                                 @click="currentPage = page"
@@ -52,13 +52,13 @@
                                 {{ page }}
                             </button>
                             </div>
-                            <button :disabled="currentPage === pageCount" @click="currentPage++">Next</button>
+                            <button :disabled="currentPage === pageCount" @click="currentPage++">{{ this.translate('next') }}</button>
                         </div>
 
                                
             </div>
         </div>
-        <div v-else><center><h2>Job not assigned to you</h2></center> </div>
+        <div v-else><center><h2>{{ this.translate('jobNotAssign') }}</h2></center> </div>
     </div>
 
     
@@ -159,7 +159,7 @@
                           </div>
 
                         <div style="float:right" v-if="form.status=='pending'">
-                            <button type="submit"   class="btn btn-primary waves-effect waves-light" >Accept</button>
+                            <button type="submit"   class="btn btn-primary waves-effect waves-light" >{{ this.translate('accept') }}</button>
                         </div>
 
                     </form>
@@ -177,7 +177,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="chatModalLabel">Chat</h5>
+                    <h5 class="modal-title mt-0" id="chatModalLabel">{{ this.translate('chat') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" @click="hideChatModal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -192,7 +192,7 @@
                           </div>
                       </li>
 
-                      <button type="submit" class="btn fontbg-color btn-light btn-lg btn-rounded float-end">Send</button>
+                      <button type="submit" class="btn fontbg-color btn-light btn-lg btn-rounded float-end">{{ this.translate('send') }}</button>
 
                     </form>
                 </div>

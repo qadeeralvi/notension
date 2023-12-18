@@ -7,7 +7,7 @@
 
       <div class="col-md-6 col-lg-5 col-xl-5 mb-4 mb-md-0">
 
-        <h5 class="font-weight-bold mb-3 text-center text-white">Provider</h5>
+        <h5 class="font-weight-bold mb-3 text-center text-white">{{ this.translate('provider') }}</h5>
 
         <div class="card mask-custom">
           <div class="card-body">
@@ -50,7 +50,7 @@
                     </div>
                 </li>
 
-                <button type="submit" class="btn btn-light btn-lg btn-rounded float-end">Send</button>
+                <button type="submit" class="btn btn-light btn-lg btn-rounded float-end">{{ this.translate('send') }}</button>
 
             </form>
 

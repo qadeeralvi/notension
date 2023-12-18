@@ -9,15 +9,15 @@
     
                             <thead>
                                 <tr>
-                                    <th>S.no</th>
-                                    <th>Title</th>
-                                    <th>Category Title</th>
-                                    <th>Sub Category Title</th>
-                                    <th>date</th>
-                                    <th>Time</th>
-                                    <th>Address</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
+                                    <th>{{ this.translate('sNo') }}</th>
+                                    <th>{{ this.translate('title') }}</th>
+                                    <th>{{ this.translate('catTitle') }}</th>
+                                    <th>{{ this.translate('subCatTitle') }}</th>
+                                    <th>{{ this.translate('date') }}</th>
+                                    <th>{{ this.translate('time') }}</th>
+                                    <th>{{ this.translate('address') }}</th>
+                                    <th>{{ this.translate('status') }}</th>
+                                    <th>{{ this.translate('action') }}</th>
                                 </tr>
                             </thead>
                             <tbody>

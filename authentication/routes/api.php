@@ -16,6 +16,7 @@ Route::post('/user_update',[UserApiController::class,'user_update']);
 Route::post('/user_forget',[UserApiController::class,'user_forget']);
 Route::post('/use_verify_code',[UserApiController::class,'use_verify_code']);
 Route::post('/check_user_email',[UserApiController::class,'check_user_email']);
+Route::post('/check_user_phone',[UserApiController::class,'check_user_phone']);
 Route::post('/change_user_status',[UserApiController::class,'change_user_status']);
 Route::post('/user_info',[UserApiController::class,'user_info']);
 

@@ -12,10 +12,10 @@
                   <div class="form-group mb-20">
                       <label for="title" class="mb-2 semi-bold title-color">{{ this.translate('paymentType') }} <span style="color: red;">*</span></label>
                       <select v-model="this.form.payment_type" class="form-control">
-                              <option selected disabled>Choose Payment Type</option>
-                              <option value="bank">Bank</option>
-                              <option value="jazzcash">Jazzcash</option>
-                              <option value="easypaisa">Easypaisa</option>
+                              <option selected disabled>{{ this.translate('choosePaymentType') }}</option>
+                              <option value="bank">{{ this.translate('bank') }}</option>
+                              <option value="jazzcash">{{ this.translate('jazzcash') }}</option>
+                              <option value="easypaisa">{{ this.translate('easyPaisa') }}</option>
                       </select>
                   </div>
               </div>
@@ -68,7 +68,7 @@
 
                 <span>
                     <font style="vertical-align: inherit;">
-                        <font style="vertical-align: inherit;">Submit</font>
+                        <font style="vertical-align: inherit;">{{ this.translate('submit') }}</font>
                     </font>
                 </span>
             </button>

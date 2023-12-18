@@ -9,15 +9,15 @@
 
                         <thead>
                             <tr>
-                                <th>S.no</th>
-                                <th>Title</th>
-                                <th>Category Title</th>
-                                <th>Sub Category Title</th>
-                                <th>date</th>
-                                <th>Time</th>
-                                <th>Address</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th>{{ this.translate('sNo') }}</th>
+                                <th>{{ this.translate('title') }}</th>
+                                <th>{{ this.translate('catTitle') }}</th>
+                                <th>{{ this.translate('subCatTitle') }}</th>
+                                <th>{{ this.translate('date') }}</th>
+                                <th>{{ this.translate('time') }}</th>
+                                <th>{{ this.translate('address') }}</th>
+                                <th>{{ this.translate('status') }}</th>
+                                <th>{{ this.translate('action') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -48,7 +48,7 @@
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="myLargeModalLabel">{{ page }} Status</h5>
+                    <h5 class="modal-title mt-0" id="myLargeModalLabel">{{ page }} {{ this.translate('status') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -57,18 +57,18 @@
                     <form @submit.prevent="onSubmit">
                             <input type="hidden" v-model="job_id">
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-md-2 col-form-label">Status</label>
+                            <label for="example-text-input" class="col-md-2 col-form-label">{{ this.translate('status') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" v-model="job_status" >
-                                    <option value="pending">Pending</option>
-                                    <option value="active">Active</option>
-                                    <option value="cancelled">Cancelled</option>
+                                    <option value="pending">{{ this.translate('pending') }}</option>
+                                    <option value="active">{{ this.translate('active') }}</option>
+                                    <option value="cancelled">{{ this.translate('cancelled') }}</option>
                                 </select>
                             </div>
                         </div>
 
                         <div style="float:right">
-                            <button type="submit"  v-on:click="saveStatus"  class="btn btn-primary waves-effect waves-light" >Save</button>
+                            <button type="submit"  v-on:click="saveStatus"  class="btn btn-primary waves-effect waves-light" >{{ this.translate('save') }}</button>
                         </div>
 
                     </form>

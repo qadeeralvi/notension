@@ -15,5 +15,4 @@ app.config.globalProperties.$chat = 'http://127.0.0.1:4010/api/'
 app.config.globalProperties.$service = 'http://127.0.0.1:4020/api/'
 app.config.globalProperties.$paymentApi = 'http://127.0.0.1:4030/api/'
 app.config.globalProperties.$website = 'http://127.0.0.1:4040/api/'
-
 app.config.globalProperties.$payment = 'http://127.0.0.1:4030/'

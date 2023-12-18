@@ -7,7 +7,7 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label for="email" class="mb-2 semi-bold black">Email Address</label>
+                                        <label for="email" class="mb-2 semi-bold black">{{ this.translate('email') }}</label>
                                         <input type="email" id="email" class="form-control" v-bind:autocomplete="autocompleteValue" placeholder="Email Address" v-model="v$.form.email.$model">
                                         <div class="input-errors" v-for="(error, index) of v$.form.email.$errors" :key="index">
                                             <div class="error-msg">{{ error.$message }}</div>
@@ -16,7 +16,7 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label for="phone" class="mb-2 semi-bold black">Phone Number</label> 
+                                        <label for="phone" class="mb-2 semi-bold black">{{ this.translate('phone') }}</label> 
                                         <input type="text" id="phone" class="form-control"  v-model="v$.form.phone.$model" placeholder="Phone Number">
                                         <div class="input-errors" v-for="(error, index) of v$.form.phone.$errors" :key="index">
                                             <div class="error-msg">{{ error.$message }}</div>
@@ -25,7 +25,7 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group" >
-                                        <label for="name" class="mb-2 semi-bold black">Name</label> 
+                                        <label for="name" class="mb-2 semi-bold black">{{ this.translate('name') }}</label> 
                                         <input type="text" id="name" class="form-control"  v-model="v$.form.name.$model" placeholder="Name">
                                         <div class="input-errors" v-for="(error, index) of v$.form.name.$errors" :key="index">
                                             <div class="error-msg">{{ error.$message }}</div>
@@ -34,7 +34,7 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label for="address" class="mb-2 semi-bold black">Address</label> 
+                                        <label for="address" class="mb-2 semi-bold black">{{ this.translate('address') }}</label> 
                                         <input type="text" id="address" class="form-control"  v-model="v$.form.address.$model" placeholder="Address">
                                         <div class="input-errors" v-for="(error, index) of v$.form.address.$errors" :key="index">
                                             <div class="error-msg">{{ error.$message }}</div>
@@ -44,7 +44,7 @@
 
                                     <div class="d-flex flex-wrap align-items-center">
                                         <button type="submit" class="btn c1-hover btn-border me-2" :disabled="v$.form.$invalid" >
-                                            <span>Save</span> 
+                                            <span>{{ this.translate('submit') }}</span> 
                                         </button>
                                     </div>
                                 </div>

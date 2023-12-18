@@ -10,9 +10,9 @@ export const request =
         }
     },
 
-
     methods: 
     {
+
         loadJS(scripts) {
             scripts.forEach((script) => {
               // if(!this.isScriptAlreadyIncluded(script,'script','src')){//check script alread load or not
@@ -36,6 +36,11 @@ export const request =
             input.value = filteredValue; // Update the input value
             this.v$.form.phone.$model = filteredValue; // Update the v-model value if necessary
         },
+
+        loader(){
+                var spinnerDiv = '<div class="spinner-container"><div class="spinner-border text-primary"></div></div>';
+                $('body').append(spinnerDiv);
+        }
 
 
     },

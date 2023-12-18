@@ -256,7 +256,6 @@ class ApiController extends Controller
             }
 
     }
-
     public function payments(Request $request)
     {
             $payment = Payment::orderBy('id','DESC')->get();

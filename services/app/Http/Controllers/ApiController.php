@@ -14,6 +14,8 @@ use App\Models\Banner;
 use App\Models\JobManagement;
 use App\Models\JobStatus;
 use App\Models\JobActive;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\JobPostEmail;
 
 class ApiController extends Controller
 {
@@ -202,7 +204,6 @@ class ApiController extends Controller
             }
                 
     }
-    
     
     public function category_Id(Request $request)
     {
@@ -523,7 +524,6 @@ class ApiController extends Controller
             ]);
     }
     
-    
     public function all_sub_category()
     {
         $sub_categories = Sub_category::orderBy('id','desc')->get();
@@ -589,7 +589,7 @@ class ApiController extends Controller
          }
     } 
     
-     public function subCategory(Request $request)
+    public function subCategory(Request $request)
     {
          $sub_categories = Sub_category::where('category_id',$request->id)->get();
          
@@ -641,7 +641,6 @@ class ApiController extends Controller
          }
     }   
     
-    
     public function post_job (Request $request) 
     {
         
@@ -653,7 +652,6 @@ class ApiController extends Controller
                 'city' => 'required',
                 'address' => 'required',
                 'description' => 'required',
-                'email' => 'required|email',
             ]);
        
             if($validator->fails()){
@@ -671,56 +669,68 @@ class ApiController extends Controller
 
             }
                     
-              if ($request->hasFile('image')) {
-                  
-                    foreach($request->image as $file) {
-                        
-
-                        $name = $file->getClientOriginalName().'.'.$file->getClientOriginalExtension();
+            if ($request->hasFile('image')) {
                 
-                        $image['filePath'] = $name;
-                
-                        $file_name = time().mt_rand(1,99999).'.'.$file->getClientOriginalExtension();;
-                
-                        $file->move(public_path().'/job_images/', $file_name);
-                        
-                        $filenames[] = $file_name;
-                        
-                    }
-                            $filename = implode(',', $filenames);
-
-                }
-                
-                $user_id = '';
-                
-        if($request->user_id==0 || $request->user_id=="0"){
+                foreach($request->image as $file) {
+                    
+                    $name = $file->getClientOriginalName().'.'.$file->getClientOriginalExtension();
             
-                 $checkuser = Http::post('https://authentication.notension.pk/api/check_user_email',[
-                            'email'=>$request->email,
-                            ]);
-                            
-                    if($checkuser['status']==200){
-                        // $user_id = $checkuser['user_id'];
-                        
+                    $image['filePath'] = $name;
+            
+                    $file_name = time().mt_rand(1,99999).'.'.$file->getClientOriginalExtension();;
+            
+                    $file->move(public_path().'/job_images/', $file_name);
+                    
+                    $filenames[] = $file_name;
+                    
+                }
+                        $filename = implode(',', $filenames);
+
+            }
+            
+            $user_id = '';
+                
+            if($request->user_id==0 || $request->user_id=="0"){
+
+                  
+                    $checkuser = Http::post('http://127.0.0.1:4000/api/check_user_email',[
+                        'email'=>$request->email,
+                        ]);
+
+                    $checkUserPhone = Http::post('http://127.0.0.1:4000/api/check_user_phone',[
+                        'phone_no'=>$request->phone,
+                        ]);
+
+                    $checkUserJson =  $checkuser->json();
+                    $checkUserPhoneJson =  $checkUserPhone->json();
+                    
+                    if($checkUserJson['status']==200){
+                        $user_id = $checkUserJson['user_id'];
+                    }
+                     
+                    elseif($checkUserPhoneJson['status']==200){
+                        $user_id = $checkUserPhoneJson['user_id'];
                     }else{
                         
-                                $pass  = substr(md5(mt_rand()), 0, 9);
-                                $user = Http::post('https://authentication.notension.pk/api/user/signup',[
-                                            'name'=>$request->name,
-                                            'email'=>$request->email,
-                                            'address'=>$request->address,
-                                            'phone_no'=>$request->phone,
-                                            'password'=>$pass,
-                                            'confirm_password'=>$pass,
-                                            'signupmethod'=>'email'
-                                ]);
-                                
-                         $user_id = $user;
+                            $pass  = substr(md5(mt_rand()), 0, 9);
+
+                            $user = Http::post('http://127.0.0.1:4000/api/user/signup',[
+                                        'name'=>$request->name,
+                                        'email'=>$request->email,
+                                        'address'=>$request->address,
+                                        'phone_no'=>$request->phone,
+                                        'password'=>$pass,
+                                        'confirm_password'=>$pass,
+                                        'signupmethod'=>'email'
+                            ]);
+
+                            $userJson =  $user->json();
+                            $user_id = $userJson['user']['id'];
                     }
-        }
+            }
                 
 
-       $job = JobManagement::create([
+            $job = JobManagement::create([
 
                 'user_id' => ($request->user_id?$request->user_id:$user_id),
                 'title' => $request->title,
@@ -741,9 +751,12 @@ class ApiController extends Controller
                 'time' =>  date("h:i:s a"),
                 'status' => 'pending'
             ]);
+
+            if($request->email){
+                Mail::to($request->email)->send(new JobPostEmail());
+            }
         
-        
-        if(isset($request->sub_category) && $request->sub_category!=0)
+            if(isset($request->sub_category) && $request->sub_category!=0)
             {
                 $Sub_category = Sub_category::where('id',$request->sub_category)->first();
 
@@ -781,10 +794,10 @@ class ApiController extends Controller
                 ]);
             }
             
-        return response()->json([
-            'status'=>200,
-            'message'=>'Job Post Successfully',
-        ]); 
+            return response()->json([
+                'status'=>200,
+                'message'=>'Job Post Successfully',
+            ]); 
             
     }
     

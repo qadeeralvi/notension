@@ -163,8 +163,9 @@ class ApiController extends Controller
     public function send_otp(Request $request)
     {
         
-       $check =  GlobalHelper::sendOTP('test007',"message","+923065179114");
-                        
+        $check =  GlobalHelper::sendOTP('test007',"message","+923065179114");
+
+        dd($check);
             return response()->json([ 
                 'status' => 200,
                 'check' =>$check,

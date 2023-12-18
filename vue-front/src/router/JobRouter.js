@@ -4,6 +4,7 @@ import JobList from '../views/user/job/JobList.vue';
 import JobUpdate from '../views/user/job/update.vue';
 import Rating from '../views/user/job/rating.vue';
 import ProviderJob from '../views/provider/job/index.vue';
+import JobPosted from '../views/user/job/jobPosted.vue';
 const routes = [
     {
         name:'Job',
@@ -34,6 +35,12 @@ const routes = [
         component: ProviderJob,
         path:"/provider/job",
         meta:{title:'ProviderJob'},
+    },
+    {
+        name:'JobPosted',
+        component: JobPosted,
+        path:"/job-posted",
+        meta:{title:'JobPosted'},
     }
 ]
 

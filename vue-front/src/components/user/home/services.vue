@@ -101,13 +101,10 @@ export default {
                             .then(response => {
                                 if(response.data.status==200){
                                     this.results = response.data;
-
-                                    console.log(this.results)
                                 }
                                 else{
                                     this.results = null;
                                 }
-                                
                             })
                             .catch(error => {
                                 console.error(error);

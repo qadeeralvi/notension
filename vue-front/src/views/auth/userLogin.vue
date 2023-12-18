@@ -8,7 +8,7 @@
                                
                                 <form @submit.prevent="login" class="login-form">
                                     <div v-if="currentStep === 1">
-                                        <h2 style="margin-left: 100px;">Login Form</h2>
+                                        <h2 style="margin-left: 100px;">{{ this.translate('loginForm') }}</h2>
                                         &nbsp;
                                         &nbsp;
                                         <div class="form-group" :class="{ error: v$.form.email.$errors.length }">
@@ -19,10 +19,16 @@
                                             </div>
                                         </div>
                                         <div class="d-flex">
-                                            <!-- <button type="button" class="nextBtn  me-2" @click="nextStep" disabled>Next</button> -->
-                                            <button type="button" data-testid="login-next-btn" font-size="18px" @click="nextStep" class="nextBtn sc-cjERFW gsLvdx" :disabled="isDisabledNext">
+                                            <button type="button" data-testid="login-next-btn" font-size="18px" @click="nextStep('user')" class="nextBtn sc-cjERFW gsLvdx" :disabled="isDisabledNext">
                                                 <span><font style="vertical-align: inherit;">
-                                                    <font style="vertical-align: inherit;">Next</font>
+                                                    <font style="vertical-align: inherit;">{{ this.translate('loginUser') }}</font>
+                                                </font></span>
+                                            </button>
+                                            &nbsp;
+                                            &nbsp;
+                                            <button type="button" data-testid="login-next-btn" font-size="18px" @click="nextStep('provider')" class="nextBtn sc-cjERFW gsLvdx" :disabled="isDisabledNext">
+                                                <span><font style="vertical-align: inherit;">
+                                                    <font style="vertical-align: inherit;">{{ this.translate('loginCompany') }}</font>
                                                 </font></span>
                                             </button>
                                         </div>
@@ -34,25 +40,25 @@
                                         </div>
                                         <h1 font-size="3,4,4,4,6,6,7,8" font-weight="500" class="sc-eDDNvR eMUhjc">
                                             <font style="vertical-align: inherit;">
-                                                <font style="vertical-align: inherit;">Log in without a password</font>
+                                                <font style="vertical-align: inherit;">{{ this.translate('loginWithoutPass') }}</font>
                                             </font>
                                         </h1>
                                     &nbsp;
                                     &nbsp;
                                     <p color="black.black9" font-size="2" class="sc-fbJfA eEtiQo">
                                         <font style="vertical-align: inherit;">
-                                            <font style="vertical-align: inherit;">At Notension you don't have to remember passwords. </font>
-                                            <font style="vertical-align: inherit;">Press the button Send me login link.</font>
+                                            <font style="vertical-align: inherit;">{{ this.translate('loginMsg') }}. </font>
+                                            <font style="vertical-align: inherit;">{{ this.translate('loginMsg1') }}.</font>
                                         </font>
                                     </p>
                                     <!-- Step 2: Choose Login Method -->
                                     <div class="d-flex flex-wrap align-items-center mb-4">
                                         <button type="button" class="btn c1-hover btn-border me-2 margin2" @click="showPasswordLogin">
-                                        <span>I want to log in with a password</span>
+                                        <span>{{ this.translate('loginbtn') }}</span>
                                         </button>
 
                                         <button type="button" class="btn c1-hover btn-border me-2 margin_bt" @click="showOTPLogin">
-                                        <span>Send me login link</span>
+                                        <span>{{ this.translate('loginbtn1') }}</span>
                                         </button>
                                     </div>
                                     </div>
@@ -75,17 +81,11 @@
                                         </div>
 
                                         <div class="d-flex flex-wrap align-items-center mb-4">
-
-                                            <button type="submit" name="user-login" value="user-login" class="btn c1-hover btn-border me-2 margin2" :disabled="v$.form.$invalid" >
-                                                <span>{{ this.translate('loginUser') }}</span> 
-                                                <img :src="$main + '/assets/img/icon/user-icon.svg'" alt="" class="svg">
+                                            <button type="submit" data-testid="login-next-btn" font-size="18px"  class="nextBtn sc-cjERFW gsLvdx" :disabled="v$.form.$invalid">
+                                                <span><font style="vertical-align: inherit;">
+                                                    <font style="vertical-align: inherit;">{{ this.translate('login') }}</font>
+                                                </font></span>
                                             </button>
-
-                                            <button type="submit" name="provider-login" value="provider-login" class="btn c1-hover btn-border me-2 margin_bt" :disabled="v$.form.$invalid" >
-                                                <span>{{ this.translate('loginCompany') }}</span> 
-                                                <img :src="$main + '/assets/img/icon/user-icon.svg'" alt="" class="svg">
-                                            </button>
-
                                         </div>
                                     </div>
 
@@ -95,22 +95,22 @@
                                         </div>
                                         <h1 font-size="3,4,4,4,6,6,7,8" font-weight="500" class="sc-eDDNvR eMUhjc">
                                             <font style="vertical-align: inherit;">
-                                                <font style="vertical-align: inherit;">Log in without a password</font>
+                                                <font style="vertical-align: inherit;">{{ this.translate('loginWithoutPass') }}</font>
                                             </font>
                                         </h1>
                                         &nbsp;
                                         &nbsp;
                                         <p color="black.black9" font-size="2" class="sc-fbJfA eEtiQo">
                                             <font style="vertical-align: inherit;">
-                                                <font style="vertical-align: inherit;">At Notension you don't have to remember passwords. </font>
-                                                <font style="vertical-align: inherit;">Press the button to be sent a login link to the e-mail <span>{{ v$.form.email.$model }}.</span></font>
+                                                <font style="vertical-align: inherit;">{{ this.translate('loginMsg') }}</font>
+                                                <font style="vertical-align: inherit;">{{ this.translate('loginMsg1') }} <span>{{ v$.form.email.$model }}.</span></font>
                                             </font>
                                         </p>
 
                                         <div class="sc-hIqOWS eZIWtP">
                                             <p color="black.black9" font-size="1" class="sc-blLsxD jKdusN">
                                                 <font style="vertical-align: inherit;">
-                                                    <font style="vertical-align: inherit;">An e-mail has been sent to <span>{{ v$.form.email.$model }}</span> if you have a user account with us.</font>
+                                                    <font style="vertical-align: inherit;">{{ this.translate('loginMsg2') }} <span>{{ v$.form.email.$model }}</span> {{ this.translate('loginMsg3') }}.</font>
                                                 </font>
                                             </p>
                                         </div>
@@ -118,19 +118,19 @@
                                         <div display="flex" class="sc-jTrPJq jVupeX" style="gap: 10px;">
                                             <h4 class="sc-hAtEyd dmdLyc">
                                                 <font style="vertical-align: inherit;">
-                                                    <font style="vertical-align: inherit;">Enter code from email</font>
+                                                    <font style="vertical-align: inherit;">{{ this.translate('enterCode') }}</font>
                                                 </font>
                                             </h4>
                                             <div data-testid="123" class="sc-4b8f1322-0 eJcBdw">
                                                 <input v-for="(input, index) in inputs" :key="index" ref="inputRefs" :data-testid="'123-input-' + index" type="tel" maxlength="1" autocomplete="one-time-code" class="sc-4b8f1322-1 TDIDl" v-model="inputs[index]">
                                             </div>
                                             <button :disabled="isButtonDisabled" type="button" class="sc-irTswW iRzsxL" @click="verify">
-                                                <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Verify</font></font></span>
+                                                <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">{{ this.translate('verify') }}</font></font></span>
                                             </button>
                                             <button type="button" class="sc-irTswW cgDvLR">
                                                 <span>
                                                     <font style="vertical-align: inherit;">
-                                                        <font style="vertical-align: inherit;" :disabled="isButtonDisabled" @click="verify">Resend the code</font>
+                                                        <font style="vertical-align: inherit;" :disabled="isButtonDisabled" @click="verify">{{ this.translate('resendCode') }}</font>
                                                     </font>
                                                 </span>
                                             </button>
@@ -243,17 +243,16 @@
 
                     async login(event) {
 
+                        this.loader();
                         event.preventDefault();
-                        
-                        const buttonClicked = event.submitter.name;
-                        
+                        this.checkBtn = localStorage.getItem('btnClicked');  
                         const parameters = {
                                     email: this.form.email,
                                     password: this.form.password,
                                 };
                                 
                                 let api;
-                                if(buttonClicked=='user-login'){
+                                if(this.checkBtn=='user'){
                                     api=this.$authentication+'login/';
                                 }
 
@@ -265,9 +264,11 @@
                                     
                                     .then(response => {
 
+                                        $('.spinner-container').hide();
+
                                         if(response.data.status==200){
-                                            
-                                            if(buttonClicked=='user-login'){
+                                            this.isLoading = false;
+                                            if(this.checkBtn=='user'){
                                                 window.localStorage.setItem('accessToken',response.data.access_token)
                                                 window.localStorage.setItem('user',JSON.stringify(response.data))
                                                 window.localStorage.setItem('type',JSON.stringify(response.data.type))
@@ -287,6 +288,7 @@
                                         }
                                         if(response.data.status==400 || response.data.status==404 || response.data.status==401  || response.data.status==203){
                                             swal("Oops!", response.data.message, "error");
+                                            this.isLoading = false;
                                         }
                                     })
                                     .catch(error => {
@@ -320,7 +322,13 @@
 
                     },
 
-                    nextStep() {
+                    nextStep(type) {
+                        if(type=='user'){
+                            window.localStorage.setItem('btnClicked',"user");
+                        }
+                        else if(type=='provider'){
+                            window.localStorage.setItem('btnClicked',"provider");
+                        }
                         this.currentStep = 2;
                     },
                     showPasswordLogin() {
@@ -384,6 +392,14 @@
                             },
                 }
     }
+
+    $(document).ready(function () {
+
+        setTimeout(function () {
+            $('.spinner-container').hide();
+        }, 1000);
+
+    });
 
 </script>
 

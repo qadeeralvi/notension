@@ -1,1 +1,6 @@
-/* It's the best idea to write your own JS in custom.js file. So if you want to write JS with your own use this file */
+$(document).ready(function () {
+    // Create the spinner div
+    var spinnerDiv = '<div class="spinner-container"><div class="spinner-border text-primary"></div></div>';
+    $('body').append(spinnerDiv);
+    // $('.spinner-container').hide();
+  });

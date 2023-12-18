@@ -54,6 +54,8 @@ return [
 
     'url' => env('APP_URL', 'https://service.notension.pk/'),
 
+    'AUTH_URL' => 'http://127.0.0.1:4000/api/',
+
     'asset_url' => env('ASSET_URL', null),
 
     /*

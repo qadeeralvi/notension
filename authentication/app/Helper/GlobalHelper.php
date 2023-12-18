@@ -61,7 +61,6 @@ class GlobalHelper
    public static function sendOTP($title, $message, $target){
           
         $SERVER_API_KEY = env('FCM_SERVER_KEY');
-    
         $data = [
             "to" => $target,
             "notification" => [
@@ -90,9 +89,13 @@ class GlobalHelper
         curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
                  
         $response = curl_exec($ch);
-        if ($response === FALSE) {
-          die('FCM Send Error: ' . curl_error($ch));
-        }
+        // if ($response === FALSE) {
+        //     return 0;
+        //   die('FCM Send Error: ' . curl_error($ch));
+            // error_log('FCM Send Error: ' . curl_error($ch));
+            // return 'FCM Send Error: ' . $response;
+        // }
+       
          curl_close($ch);
          return $response;
    }

@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\ServiceGiver\ServiceGiverContoller;
 use App\Http\Controllers\ServiceGiver\ServiceProviderDashboard;
 use App\Http\Controllers\ServiceGiver\ProviderJobManagement;
+use App\Http\Controllers\ApiController;
 // use App\Http\Controllers\ServiceProvider\ServiceProviderController;
 // use App\Http\Controllers\ServiceProvider\Jb;
 /*
@@ -28,7 +29,7 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-
+Route::get('/send_otp',[ApiController::class,'send_otp']);
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::prefix('admin')->name('admin.')->group(function(){

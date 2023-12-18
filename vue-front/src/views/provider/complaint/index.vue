@@ -4,7 +4,7 @@
                     <div class="row justify-content-center">
 
                         <div class="col-md-12 mb-2">
-                            <button type="button" class="btn btn-primary" @click="showAddModel">Add Complain</button>
+                            <button type="button" class="btn btn-primary" @click="showAddModel">{{ this.translate('addComplaint') }}</button>
                         </div>
 
                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; background-color:#f1f1f1;border-spacing: 0; width: 100%;">
@@ -19,23 +19,23 @@
                                         </th>
                                         <th>
                                             <select class="form-control" v-model="status">
-                                                <option value="">All</option>
-                                                <option value="active">Active</option>
-                                                <option value="pending">Pending</option>
-                                                <option value="done">Complete</option>
+                                                <option value="">{{ this.translate('all') }}</option>
+                                                <option value="active">{{ this.translate('active') }}</option>
+                                                <option value="pending">{{ this.translate('pending') }}</option>
+                                                <option value="done">{{ this.translate('completed') }}</option>
                                             </select>
                                         </th>
                                         <th></th>
                                         <th></th>
                                 </tr>
                                 <tr>
-                                    <th>S.no</th>
-                                    <th>Complaint Against</th>
-                                    <th>Service Id</th>
-                                    <th>Status</th>
-                                    <th>Description</th>
-                                    <th>Image</th>
-                                    <th>Action</th>
+                                    <th>{{ this.translate('sNo') }}</th>
+                                    <th>{{ this.translate('complaintAgainst') }}</th>
+                                    <th>{{ this.translate('serviceId') }}</th>
+                                    <th>{{ this.translate('status') }}</th>
+                                    <th>{{ this.translate('description') }}</th>
+                                    <th>{{ this.translate('image') }}</th>
+                                    <th>{{ this.translate('action') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -47,14 +47,14 @@
                                     <td>{{item.description}}</td>
                                     <td><img :src="item.file" height="100" width="100"></td>
                                     <td>
-                                        <button @click="showChat(item.complainer_id,item.complaint_type,item.id)" class="btn" style="background-color:aqua;">chat</button>
+                                        <button @click="showChat(item.complainer_id,item.complaint_type,item.id)" class="btn" style="background-color:aqua;">{{ this.translate('chat') }}</button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
 
                         <div style="display: flex; align-items: center;">
-                            <button class="btn btn-success" :disabled="currentPage === 1" @click="currentPage--">Prev</button>
+                            <button class="btn btn-success" :disabled="currentPage === 1" @click="currentPage--">{{ this.translate('prev') }}</button>
                             <div v-for="page in pageCount" :key="page" style="margin: 0 5px;">
                             <button class="btn btn-info"
                                 @click="currentPage = page"
@@ -63,7 +63,7 @@
                                 {{ page }}
                             </button>
                             </div>
-                            <button class="btn btn-success" :disabled="currentPage === pageCount" @click="currentPage++">Next</button>
+                            <button class="btn btn-success" :disabled="currentPage === pageCount" @click="currentPage++">{{ this.translate('next') }}</button>
                         </div>
     
     
@@ -77,7 +77,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="chatLabel">{{ page }} Add Complain</h5>
+                    <h5 class="modal-title mt-0" id="chatLabel">{{ page }}{{ this.translate('addComplaint') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" @click="hideAddModel" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -87,12 +87,12 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group  mb-20">
-                                    <label for="l_name" class="mb-2 semi-bold title-color">Complaint Against <span style="color: red;">*</span></label>
+                                    <label for="l_name" class="mb-2 semi-bold title-color">{{ this.translate('complaintAgainst') }} <span style="color: red;">*</span></label>
                                         <div class="custom-select c1">
                                                 <select  v-model="form.complaint_against_type" class="form-control">
-                                                        <option selected disabled>Choose category from dropdown</option>
-                                                        <option value="user">User</option>
-                                                        <option value="system">System</option>
+                                                        <option selected disabled>{{ this.translate('choseCatDrop') }}</option>
+                                                        <option value="user">{{ this.translate('user') }}</option>
+                                                        <option value="system">{{ this.translate('system') }}</option>
                                                 </select>
                                         </div>
                                 </div>
@@ -101,10 +101,10 @@
                         <div class="row">
                             <div class="col-lg-6"  v-if="form.complaint_against_type === 'user'">
                                 <div class="form-group mb-20" >
-                                    <label for="l_name" class="mb-2 semi-bold title-color">Users</label>
+                                    <label for="l_name" class="mb-2 semi-bold title-color">{{ this.translate('user') }}</label>
                                     <div class="custom-select c1">
                                         <select name="" id=""  class="form-control"  v-model="form.providerId">
-                                                <option >Choose Subcategory from dropdown</option>
+                                                <option >{{ this.translate('choseCatDrop') }}</option>
                                                 <option v-for="pro in userList" :value="pro.userId">{{ pro.userName }}</option>
                                         </select>
                                     </div>
@@ -113,7 +113,7 @@
 
                             <div class="col-lg-6"  v-if="form.complaint_against_type === 'user'">
                                 <div class="form-group mb-20" >
-                                    <label for="name" class="mb-2 semi-bold title-color">Job Id</label>
+                                    <label for="name" class="mb-2 semi-bold title-color">{{ this.translate('jobId') }}</label>
                                     <div class="custom-select c1">
                                         <input type="text"  class="form-control" placeholder="Job Id" v-model="form.jobId">
                                     </div>
@@ -123,14 +123,14 @@
 
                         <div class="row">
                             <div class="col-lg-12">
-                                    <label class="mb-2 semi-bold title-color">Description</label>
+                                    <label class="mb-2 semi-bold title-color">{{ this.translate('description') }}</label>
                                     <textarea class="form-control" v-model="form.description" rows="8"></textarea>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-lg-6">
-                                    <label class="mb-2 semi-bold title-color">Upload image</label>
+                                    <label class="mb-2 semi-bold title-color">{{ this.translate('uploadImage') }}</label>
                                     <input ref="fileInput" @input="pickFile" @change="handleFileUpload"  type="file" class="form-control" :placeholder="this.translate('uploadImage')" >
                             </div>
                             <div class="col-lg-6"  v-if="this.previewImage">
@@ -138,7 +138,7 @@
                             </div>
                         </div>
                         <br>
-                        <button type="submit" class="btn btn-success btn-lg btn-rounded float-end" style="float:right">save</button>
+                        <button type="submit" class="btn btn-success btn-lg btn-rounded float-end" style="float:right">{{ this.translate('save') }}</button>
                     </form>
                 </div>
             </div>
@@ -151,7 +151,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="chatLabel">{{ page }} Chat</h5>
+                    <h5 class="modal-title mt-0" id="chatLabel">{{ page }} {{ this.translate('chat') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" @click="hideChatModel" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

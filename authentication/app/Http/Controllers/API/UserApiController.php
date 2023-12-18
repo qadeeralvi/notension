@@ -27,21 +27,16 @@ class UserApiController extends Controller
 {
     public function userRegistration (Request $request) 
     {
-        
-        
-       
         if(!isset($request->signupmethod)){
             
              return response()->json([
                 'status'=>203,
                 'message'=>'signupmethod paramter is missing',
             ]);
-            
         }
         
         if($request->signupmethod=="email"){
 
-        
                 if(!isset($request->email) || !isset($request->name) || !isset($request->phone_no) || !isset($request->address) || !isset($request->password)){
                     
                     return response()->json([
@@ -51,7 +46,6 @@ class UserApiController extends Controller
                     
                 }
         }
-        
         
         elseif($request->signupmethod=="google" || $request->signupmethod=="facebook"){
             
@@ -64,7 +58,6 @@ class UserApiController extends Controller
                 
             }
         }
-        
         
         if (!filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
             return response()->json([
@@ -86,21 +79,22 @@ class UserApiController extends Controller
                 'message'=>'Already User exit',
                 'user_id'=> $user_exit->id,
             ]);
+        }else{
+
         }
-        
-        // if($request->password != $request->confirm_password){
-        //      return response()->json([
-        //         'status'=>201,
-        //         'message'=>'Confirm password not match with password',
-        //     ]);
-        // }
-      
        
         $password = Hash::make($request->password);
         $confirmPassword = Hash::make($request->confirm_password);
         $request->merge([ "password"=>$password, 'confirm_password'=>$confirmPassword]);
+
         $user = User::create($request->all());
-     
+
+        $data = array(
+            'name'=>$user->name
+        );
+        
+        Mail::to($request->email)->send(new RegisterGreetingMail($data));
+
         return response()->json([
             'status'=>200,
             'message'=>'Registered Successfully',
@@ -311,11 +305,10 @@ class UserApiController extends Controller
     
     public function check_user_email(Request $request)
     {
-        
         $user = User::where('email',$request->email)->first();
         
         if($user==null){
-            return response()->json([
+                    return response()->json([
                         'status'=>404,
                         'message'=>'email not exits',
                     ]);
@@ -324,6 +317,26 @@ class UserApiController extends Controller
             return response()->json([
                         'status'=>200,
                         'message'=>'Email already exits',
+                        'user_id'=>$user->id,
+                    ]);
+        }
+    }
+
+    public function check_user_phone(Request $request)
+    {
+        
+        $user = User::where('phone_no',$request->phone_no)->first();
+        
+        if($user==null){
+            return response()->json([
+                        'status'=>404,
+                        'message'=>'Phone not exits',
+                    ]);
+        }
+        else{
+            return response()->json([
+                        'status'=>200,
+                        'message'=>'Phone already exits',
                         'user_id'=>$user->id,
                     ]);
         }

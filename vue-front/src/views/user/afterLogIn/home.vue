@@ -8,7 +8,7 @@
                                     <label class="toggle" style="float:right">
                                         <input type="checkbox" v-model="showPending">
                                         <span class="slider"></span>
-                                        <span class="labels" :data-on="onText" :data-off="offText"></span>
+                                        <span class="labels" :data-on="onText" :data-off="offText" ></span>
                                     </label>
 
                                 </div>
@@ -16,37 +16,37 @@
                     <div class=" form-wrap login-form-wrap style--two card-button">
                            
                             <span v-for="(item,index) in paginatedResult" :key="index">
-                            <div class="row gray" >
-                                <div class="col-lg-2 col-xs-6">
-                                    <div class="form-group">
-                                       <img :src="this.$main + 'assets//img/icon/service-icon1.png'" alt="no">
+                                <div class="row gray" >
+                                    <div class="col-lg-2 col-xs-6">
+                                        <div class="form-group">
+                                          <img :src="this.$main + 'assets//img/icon/service-icon1.png'" alt="no">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-4 col-xs-6">
-                                    <div class="form-group">
-                                        <h3 class="font-color">{{item.title}}</h3>
+                                    <div class="col-lg-4 col-xs-6">
+                                        <div class="form-group">
+                                            <h3 class="font-color">{{item.title}}</h3>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-3">
-                                    <div class="form-group">
-                                        <span class="font-color">{{item.date}} / {{ item.time }}</span>
+                                    <div class="col-lg-3">
+                                        <div class="form-group">
+                                            <span class="font-color">{{item.date}} / {{ item.time }}</span>
+                                        </div>
                                     </div>
+                                    <div class="col-lg-3">
+                                      <div class="form-group">
+                                        <button :class="{'btn btn-info': item.status === 'pending', 'btn btn-success': item.status !== 'pending'}">{{ item.status }}</button>
+                                        &nbsp <router-link  v-if="item.status=='active'" :to="{ path: '/chat', query: { id: item.id } }">
+                                                <button  class="btn btn-warning notification">Chat
+                                                  <span class="badge" style="display:none">{{ getBadgeValue(item.id) }}</span>
+                                                  <span class="badge">{{this.unseen}}</span>
+                                                </button>
+                                              </router-link>
+                                      </div>
+                                    </div>
+                                  
                                 </div>
-                                <div class="col-lg-3">
-                                  <div class="form-group">
-                                    <button :class="{'btn btn-info': item.status === 'pending', 'btn btn-success': item.status !== 'pending'}">{{ item.status }}</button>
-                                    &nbsp <router-link  v-if="item.status=='active'" :to="{ path: '/chat', query: { id: item.id } }">
-                                            <button  class="btn btn-warning notification">Chat
-                                              <span class="badge" style="display:none">{{ getBadgeValue(item.id) }}</span>
-                                              <span class="badge">{{this.unseen}}</span>
-                                            </button>
-                                          </router-link>
-                                  </div>
-                                </div>
-                               
-                            </div>
-                            <hr>
-                        </span>
+                                <hr>
+                            </span>
                         <div style="display: flex; align-items: center;">
                             <button :disabled="currentPage === 1" @click="currentPage--">{{ this.translate('prev') }}</button>
                             <div v-for="page in pageCount" :key="page" style="margin: 0 5px;">
@@ -61,7 +61,7 @@
                         </div>
             </div>
         </div>
-        <div v-else><center><h2>You don't post job yet</h2></center> </div>
+        <div v-else><center><h2>{{ this.translate('jobNotPost') }}</h2></center> </div>
     </div>
 
 </template>
@@ -81,6 +81,7 @@ export default {
       offText: 'Finished',
       unseen:'0',
       count:0,
+      total:0,
     };
   },
   computed: {
@@ -98,7 +99,7 @@ export default {
             if (this.showPending) {
               return item.status === 'pending';
             } else {
-              return true;
+              return item.status === 'active';
             }
           });
           return filteredResult.slice(start, end);
@@ -235,7 +236,6 @@ export default {
                           console.error(error);
                       });
             },
-
 
     sentMsg(){
 

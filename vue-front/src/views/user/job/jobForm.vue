@@ -5,7 +5,7 @@
                 <div class="row justify-content-center">
                     <div class="col">
                         <div class="form-wrap login-form-wrap style--two form-border">
-                            <center><h2>Job Post Form</h2></center>
+                            <center><h2>{{ this.translate('jobForm') }}</h2></center>
                                 &nbsp;
                                 &nbsp;
                             <form @submit.prevent="submitOTP" >
@@ -63,7 +63,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                            </div>
                             </div>
                                 <div class="tab" v-show="currentTab === 1">
                                     <input v-model="tab[1].inputValue" class="form-controle" type="hidden">
@@ -173,18 +173,18 @@
                                         </form>
                                     </div>
                                     <center>
-                                        <button class="btn btn-success" @click="prevTab">Prev</button>&nbsp
+                                        <button class="btn btn-success" @click="prevTab">{{ this.translate('prev') }}</button>&nbsp
                                         <button type="submit"
                                                         class="btn btn-success"
                                                         :disabled="v$.form.$invalid" >
-                                                    <span>Submit</span>
+                                                    <span>{{ this.translate('submit') }}</span>
                                         </button>
                                     </center>
                                 </div>
                                     <center>
                                         <div v-show="currentTab != 2">
-                                            <button type="button" class="btn btn-success"  :disabled="prewBtn" @click="prevTab">Prev</button>&nbsp
-                                            <button type="button" class="btn btn-success btnNext" :disabled="isNextButtonDisabled" :class="'length' + currentTab " @click="nextTab">{{ currentTab === steps.length - 1 ? '' : 'Next' }}</button>
+                                            <button type="button" class="btn btn-success"  :disabled="prewBtn" @click="prevTab">{{ this.translate('prev') }}</button>&nbsp
+                                            <button type="button" class="btn btn-success btnNext" :disabled="isNextButtonDisabled" :class="'length' + currentTab " @click="nextTab">{{ currentTab === steps.length - 1 ? '' : this.translate('next') }}</button>
                                         </div>
                                     </center>
                                     <div>
@@ -216,7 +216,7 @@
 
   export default {
 
-    setup () {
+        setup () {
             return { v$: useVuelidate() }
         },
 
@@ -261,62 +261,62 @@
                 // fetch categories from API or elsewhere and set to this.categories
                 },
 
-    data() {
+        data() {
 
-      return {
-                    selectedCategoryId:null,
-                    selectedSubCategoryId:null,
-                    categories: [],
-                    subCategories: [],  
-                    showSubCategorySelect:true, 
-                    phoneNumber: '',
-                    verificationId: '',
-                    verificationCode: '',
-                    confirmationResult: null,
-                    otpSent: false,
+            return {
+                        selectedCategoryId:null,
+                        selectedSubCategoryId:null,
+                        categories: [],
+                        subCategories: [],  
+                        showSubCategorySelect:true, 
+                        phoneNumber: '',
+                        verificationId: '',
+                        verificationCode: '',
+                        confirmationResult: null,
+                        otpSent: false,
+                        form: {
+                                title: (localStorage.getItem('formHeading')!=''?localStorage.getItem('formHeading'):''),
+                                description:'',
+                                name: '',
+                                email: '',
+                                phone: '',
+                                address: '',
+                                city: '',
+                                s_date: '',
+                                cost: '',
+                                category: '',
+                                sub_category: '',
+                                confirmPassword: '',
+                            },      
+                        currentTab: 0,
+                        prewBtn:true,
+                        steps: ['Step 1', 'Step 2', 'Step 3'],
+                        tab: [
+                        { inputValue: '', valid: false },
+                        { inputValue: '', valid: false },
+                        { inputValue: '', valid: false }
+                        ]
+            }
 
-                    form: {
-                            title: (localStorage.getItem('formHeading')!=''?localStorage.getItem('formHeading'):''),
-                            description:'',
-                            name: '',
-                            email: '',
-                            phone: '',
-                            address: '',
-                            city: '',
-                            s_date: '',
-                            cost: '',
-                            category: '',
-                            sub_category: '',
-                            confirmPassword: '',
-                        },      
-                currentTab: 0,
-                prewBtn:true,
-                steps: ['Step 1', 'Step 2', 'Step 3'],
-                tab: [
-                { inputValue: '', valid: false },
-                { inputValue: '', valid: false },
-                { inputValue: '', valid: false }
-                ]
-      }
-
-    },
-    validations() {
-
-                return {
-
-                    form: {
-                        
-                        title: {  required },
-                        description: {  required },
-                        name: {  required },
-                        email: {  email },
-                        phone: {  required },
-                        city: {  required },
-                        address: {  required },
-                        
-                    },
-                }
         },
+
+        validations() {
+
+                    return {
+
+                        form: {
+                            
+                            title: {  required },
+                            description: {  required },
+                            name: {  required },
+                            email: {  email },
+                            phone: {  required },
+                            city: {  required },
+                            address: {  required },
+                            
+                        },
+                    }
+            },
 
         computed: {
             isNextButtonDisabled() {
@@ -346,209 +346,222 @@
             },
         },
 
-    mounted() {
+        mounted() {
 
-            axios.get(this.$service+'category')
-                .then(response => {
-                    this.categories = response.data;
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+                axios.get(this.$service+'category')
+                    .then(response => {
+                        this.categories = response.data;
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
 
-                const phoneInputField = document.querySelector("#phone");
-                const phoneInput = window.intlTelInput(phoneInputField, {
-                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-                    initialCountry: "pk",
-                });
+                    const phoneInputField = document.querySelector("#phone");
+                    const phoneInput = window.intlTelInput(phoneInputField, {
+                        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+                        initialCountry: "pk",
+                    });
 
-                const element = document.querySelector('.iti--allow-dropdown');
-                element.style.display = 'block';
+                    const element = document.querySelector('.iti--allow-dropdown');
+                    element.style.display = 'block';
 
-            },
+                },
 
-    methods: {
+        methods: {
 
-            prevTab() {
-                if (this.currentTab > 0) {
-                    this.currentTab--;
-                }
-            },
+                prevTab() {
+                    if (this.currentTab > 0) {
+                        this.currentTab--;
+                    }
+                },
 
-            nextTab() {
+                nextTab() {
+                    
+
+                    if (this.currentTab < this.steps.length - 1) {
+                        this.currentTab++;
+                    } else {
+                        this.submitForm();
+                    }
+                },
                 
-
-                if (this.currentTab < this.steps.length - 1) {
-                    this.currentTab++;
-                } else {
-                    this.submitForm();
-                }
-            },
-            
-            submitOTP() {
-                        
-                        if (!this.isLoggedIn) {
-                            this.postJob();
-                        }
-                        else{
-                                firebase.initializeApp(config);
-                                const phoneInputField = document.querySelector("#phone");
-                                const phoneInput = window.intlTelInputGlobals.getInstance(phoneInputField);
-                                const phoneNumber = phoneInput.getNumber();
-
-                                window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-                                    'size': 'visible',
-                                    'callback': (response) => {
-                                        // reCAPTCHA solved, allow signInWithPhoneNumber.
-                                        onSignInSubmit();
-                                    }
-                                });
-
-                                const appVerifier = window.recaptchaVerifier;
-                                firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-                                .then((confirmationResult) => {
-
-                                    this.otpSent = true;
-                                    this.confirmationResult = confirmationResult;
-                                    this.verificationId = confirmationResult.verificationId
-                                })
-                                .catch((error) => {
-                                    console.error(error);
-                                });
+                submitOTP() {
+                            
+                            if (!this.isLoggedIn) {
+                                this.postJob();
                             }
+                            else{
+                                    firebase.initializeApp(config);
+                                    const phoneInputField = document.querySelector("#phone");
+                                    const phoneInput = window.intlTelInputGlobals.getInstance(phoneInputField);
+                                    const phoneNumber = phoneInput.getNumber();
 
-                    },
+                                    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+                                        'size': 'visible',
+                                        'callback': (response) => {
+                                            // reCAPTCHA solved, allow signInWithPhoneNumber.
+                                            onSignInSubmit();
+                                        }
+                                    });
 
+                                    const appVerifier = window.recaptchaVerifier;
+                                    firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+                                    .then((confirmationResult) => {
+                                        this.otpSent = true;
+                                        this.confirmationResult = confirmationResult;
+                                        this.verificationId = confirmationResult.verificationId
+                                    })
+                                    .catch((error) => {
+                                        console.error(error);
+                                    });
+                                }
 
-            verifyOtp() {
-                            // firebase.initializeApp(config);
-                            const credential = firebase.auth.PhoneAuthProvider.credential(this.verificationId, this.verificationCode)
-                            firebase.auth().signInWithCredential(credential)
-                                .then(() => {
-                                    this.postJob();
-                                })
-                                .catch(error => {
-                                    swal("Oops!", "Please Enter correct code", "error");
-                                })
                         },
 
 
-            fetchSubCategory(event='',cat=''){
+                verifyOtp() {
+                                // firebase.initializeApp(config);
+                                const credential = firebase.auth.PhoneAuthProvider.credential(this.verificationId, this.verificationCode)
+                                firebase.auth().signInWithCredential(credential)
+                                    .then(() => {
+                                        this.postJob();
+                                    })
+                                    .catch(error => {
+                                        swal("Oops!", "Please Enter correct code", "error");
+                                    })
+                            },
 
-                                let parameters = {};
 
-                                if(cat!=''){
-                                    parameters = {  id: cat, };
-                                }
-                                else{
-                                    parameters = { id: event.target.value, };
-                                }
+                fetchSubCategory(event='',cat=''){
 
-                                axios.post(this.$service+'subCategory',parameters)
-                                .then(response => {
-                                    if(response.data.status==200){
-                                        this.subCategories = response.data;
-                                        this.showSubCategorySelect=true;
+                                    let parameters = {};
+
+                                    if(cat!=''){
+                                        parameters = {  id: cat, };
                                     }
                                     else{
-                                        this.showSubCategorySelect=false;
+                                        parameters = { id: event.target.value, };
                                     }
-                                })
-                                .catch(error => {
-                                    console.log(error)
-                                });
 
-                        },
+                                    axios.post(this.$service+'subCategory',parameters)
+                                    .then(response => {
+                                        if(response.data.status==200){
+                                            this.subCategories = response.data;
+                                            this.showSubCategorySelect=true;
+                                        }
+                                        else{
+                                            this.showSubCategorySelect=false;
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.log(error)
+                                    });
 
-            async postJob() {
+                            },
 
-                                this.isLoggedIn = localStorage.getItem('accessToken') !== null;
-                                this.userId = localStorage.getItem('user');
-                                const user = JSON.parse(this.userId);
+                async postJob() {
+                            var spinnerDiv = '<div class="spinner-container"><div class="spinner-border text-primary"></div></div>';
+                            $('body').append(spinnerDiv);
+                                    this.isLoggedIn = localStorage.getItem('accessToken') !== null;
+                                    this.userId = localStorage.getItem('user');
+                                    const user = JSON.parse(this.userId);
 
-                                const phoneInputField = document.querySelector("#phone");
-                                const phoneInput = window.intlTelInputGlobals.getInstance(phoneInputField);
-                                const phoneNumber = phoneInput.getNumber();
-                                if (this.isLoggedIn) {
-                                        const parameters = {
-                                            user_id: (user?user.user_id:'0'),
-                                            email: this.form.email,
-                                            category: this.selectedCategoryId,
-                                            title: this.form.title,
-                                            name: this.form.name,
-                                            phone: phoneNumber,
-                                            address: this.form.address,
-                                            city: this.form.city,
-                                            job_start: this.form.s_date,
-                                            your_cost: this.form.cost,
-                                            sub_category: this.selectedSubCategoryId,
-                                            description: "test",
-                                            signupmethod:"email"
-                                        };
+                                    const phoneInputField = document.querySelector("#phone");
+                                    const phoneInput = window.intlTelInputGlobals.getInstance(phoneInputField);
+                                    const phoneNumber = phoneInput.getNumber();
+                                            const parameters = {
+                                                user_id: (user?user.user_id:'0'),
+                                                email: this.form.email,
+                                                category: this.selectedCategoryId,
+                                                title: this.form.title,
+                                                name: this.form.name,
+                                                phone: phoneNumber,
+                                                address: this.form.address,
+                                                city: this.form.city,
+                                                job_start: this.form.s_date,
+                                                your_cost: this.form.cost,
+                                                sub_category: this.selectedSubCategoryId,
+                                                description: "test",
+                                                signupmethod:"email"
+                                            };
 
-                                        axios.post(this.$service+'post_job/',parameters)
-                                            .then(response => {
+                                            axios.post(this.$service+'post_job/',parameters)
+                                                .then(response => {
 
-                                                if(response.data.status==200){
+                                                    setTimeout(function () {
+                                                        $('.spinner-container').hide();
+                                                    }, 1000);
 
-                                                    swal("Job Posted Successfully!", "" ,"success");
-                                                    localStorage.removeItem('formHeading');
-                                                    localStorage.removeItem('typeFromHeading');
-                                                    this.$router.push({name:"JobList"});
-                                                }
+                                                    if (this.isLoggedIn) {
 
-                                                if(response.data.status==400){
-                                                    swal("Oops!", response.data.message, "error");
-                                                }
+                                                        if(response.data.status==200){
 
-                                            })
-                                            .catch(error => {
-                                                    console.log(error)
-                                            });
-                                }else{
+                                                            swal("Job Posted Successfully!", "" ,"success");
+                                                            localStorage.removeItem('formHeading');
+                                                            localStorage.removeItem('typeFromHeading');
+                                                            this.$router.push({name:"JobList"});
+                                                        }
 
-                                    swal("Do Login for more details!", "" ,"success");
-                                    this.$router.push({name:"Login"});
-                                }
-                        },
+                                                        if(response.data.status==400){
+                                                            swal("Oops!", response.data.message, "error");
+                                                        }
+                                                    }else{
+                                                        this.$router.push({name:"JobPosted"});
+                                                    }
+
+                                                })
+                                                .catch(error => {
+                                                        console.log(error)
+                                                });
+                                
+                                },
 
 
-                        async fetchUserInfo() {
+                async fetchUserInfo() {
 
-                            this.isLoggedIn = localStorage.getItem('user');
+                    this.isLoggedIn = localStorage.getItem('user');
 
-                            if(this.isLoggedIn!=null){
+                    if(this.isLoggedIn!=null){
 
-                                const data = JSON.parse(this.isLoggedIn);
+                        const data = JSON.parse(this.isLoggedIn);
 
-                                const user_id = data.user_id; // Access the status property
+                        const user_id = data.user_id; // Access the status property
 
-                                const parameters = {
-                                    id: user_id,
-                                };
+                        const parameters = {
+                            id: user_id,
+                        };
 
-                                axios.post(this.$authentication+'user_info/',parameters)
-                                .then(response => {
-                                    if(response.data.status==200){
-                                        this.info =  response.data.user
-                                        this.form.email =  this.info.email
-                                        this.form.phone =  this.info.phone_no
-                                        this.form.name =  this.info.name
-                                        this.form.address =  this.info.address
-                                    }
-                                    if(response.data.status==400){
-                                        swal("Oops!", response.data.message, "error");
-                                    }
-                                })
-                                .catch(error => {
-                                    console.log(error)
-                                });
+                        axios.post(this.$authentication+'user_info/',parameters)
+                        .then(response => {
+                            if(response.data.status==200){
+                                this.info =  response.data.user
+                                this.form.email =  this.info.email
+                                this.form.phone =  this.info.phone_no
+                                this.form.name =   this.info.name
+                                this.form.address =this.info.address
                             }
-                        },
+                            if(response.data.status==400){
+                                swal("Oops!", response.data.message, "error");
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        });
+                    }
+                },
 
-                        
-    }
+                            
+        }
   };
+
+
+  $(document).ready(function () {
+
+        setTimeout(function () {
+            $('.spinner-container').hide();
+        }, 1000);
+
+    });
   </script>
   
 
